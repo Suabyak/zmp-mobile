@@ -116,7 +116,7 @@
             android:layout_height="wrap_content"
             android:backgroundTint="#ffffff"
             android:hint="Password"
-            android:inputType="text" />
+            android:inputType="text|textPassword" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
