@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import androidx.lifecycle.lifecycleScope
 import com.example.mobilesocialapp.databinding.ActivityMainBinding
+import kotlinx.coroutines.CoroutineScope
 import retrofit2.HttpException
 import java.io.IOException
 
@@ -37,26 +38,27 @@ class MainActivity : AppCompatActivity() {
             } else if(TextUtils.isEmpty(password)) {
                 binding.passwordLoginText.setError("Please enter password")
             } else {
+                binding.loginMessage.text = ""
                 lifecycleScope.launchWhenCreated {
                     val response = try {
                         val newAuthRequest = AuthRequest(username, password)
                         RetrofitInstance.api.signIn(newAuthRequest)
                     } catch(e: IOException) {
-                        println(e)
-                        Log.e(TAG, "you might not have internet connection")
+                        binding.loginMessage.text = "You might not have internet connection"
                         return@launchWhenCreated
                     } catch(e: HttpException) {
-                        Log.e(TAG, "unexpected response")
+                        binding.loginMessage.text = "Unexpected response"
                         return@launchWhenCreated
                     }
 
                     if(response.isSuccessful && response.body() != null) {
-                        println("Zalogowano")
                         sharedPreferences.edit()
                             .putString("jwt", response.body()!!.message)
                             .apply()
+                        val intent = Intent(this@MainActivity, DashboardActivity::class.java)
+                        startActivity(intent)
                     } else {
-                        Log.e(TAG, "Response not successful")
+                        binding.loginMessage.text = "Incorrect credentials"
                     }
                 }
             }
