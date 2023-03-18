@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(LayoutInflater.from(this))
-        val sharedPreferences: SharedPreferences = this.getSharedPreferences("jwt", Context.MODE_PRIVATE)
+        val sharedPreferences: SharedPreferences = this.getSharedPreferences("jwt", MODE_PRIVATE)
         setContentView(binding.root)
 
         binding.singupTextLogin.setOnClickListener {
