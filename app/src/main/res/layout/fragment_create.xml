@@ -6,14 +6,51 @@
     android:layout_height="match_parent"
     tools:context=".fragments.CreateFragment">
 
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextCreate"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <EditText
+        android:id="@+id/descriptionInput"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:hint="Post Description"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/imageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="34dp"
+        android:backgroundTint="@color/main_color"
+        android:src="@drawable/baseline_image_24"
+        android:contentDescription="Choose file"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/descriptionInput" />
+
+    <Button
+        android:id="@+id/createPostButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="33dp"
+        android:layout_marginEnd="20dp"
+        android:backgroundTint="@color/main_color"
+        android:text="Create Post"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imageButton"
+        app:layout_constraintTop_toBottomOf="@+id/descriptionInput" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="139dp"
+        android:src="@drawable/ic_launcher_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/createPostButton" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
