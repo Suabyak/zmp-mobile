@@ -1,4 +1,4 @@
-package com.example.mobilesocialapp
+package com.example.mobilesocialapp.response
 
 data class AuthResponse(
     val success: Boolean,

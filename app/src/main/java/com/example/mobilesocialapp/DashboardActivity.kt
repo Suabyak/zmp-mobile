@@ -42,6 +42,7 @@ class DashboardActivity : AppCompatActivity() {
 //                }
 
                 R.id.add -> {
+                    createFragment.arguments = bundle
                     setFragment(createFragment)
                 }
 
