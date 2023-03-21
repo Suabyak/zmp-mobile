@@ -1,16 +1,14 @@
 package com.example.mobilesocialapp
 
-import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
 import android.view.LayoutInflater
 import androidx.lifecycle.lifecycleScope
 import com.example.mobilesocialapp.databinding.ActivityMainBinding
-import kotlinx.coroutines.CoroutineScope
+import com.example.mobilesocialapp.request.AuthRequest
 import retrofit2.HttpException
 import java.io.IOException
 
