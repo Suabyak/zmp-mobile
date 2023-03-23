@@ -1,14 +1,17 @@
 package com.example.mobilesocialapp
 
-import android.content.SharedPreferences
 import com.example.mobilesocialapp.request.AuthRequest
 import com.example.mobilesocialapp.request.CreatePostRequest
 import com.example.mobilesocialapp.response.AuthResponse
 import com.example.mobilesocialapp.response.CreatePostResponse
+import com.example.mobilesocialapp.response.PostResponse
+import com.example.mobilesocialapp.response.UserDataProfileResponse
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface AuthApi {
     @POST("/user/signinspecial")
@@ -17,4 +20,10 @@ interface AuthApi {
     @POST("/posts/createPost")
     suspend fun createPost(@Body createPostRequest: CreatePostRequest,
                            @Header("Authorization") token: String): Response<CreatePostResponse>
+
+    @GET("/posts/getUserPostsSpecial")
+    suspend fun getUserPosts(@Query("key") key: String): Response<List<PostResponse>>
+
+    @GET("/user/getUserDataProfileSpecial")
+    suspend fun getUserDataProfile(@Query("key") key: String): Response<UserDataProfileResponse>
 }
