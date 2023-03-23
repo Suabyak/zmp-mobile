@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import com.example.mobilesocialapp.databinding.ActivityDashboardBinding
 import com.example.mobilesocialapp.fragments.CreateFragment
 import com.example.mobilesocialapp.fragments.HomeFragment
+import com.example.mobilesocialapp.fragments.ProfileFragment
 
 class DashboardActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDashboardBinding
@@ -25,6 +26,7 @@ class DashboardActivity : AppCompatActivity() {
 
         val homeFragment = HomeFragment()
         val createFragment = CreateFragment()
+        val profileFragment = ProfileFragment()
 
         homeFragment.arguments = bundle
         setFragment(homeFragment)
@@ -46,10 +48,10 @@ class DashboardActivity : AppCompatActivity() {
                     setFragment(createFragment)
                 }
 
-//                R.id.profile -> {
-//                    val intent = Intent(this, CreateActivity::class.java)
-//                    startActivity(intent)
-//                }
+                R.id.profile -> {
+                    profileFragment.arguments = bundle
+                    setFragment(profileFragment)
+                }
             }
 
             true
