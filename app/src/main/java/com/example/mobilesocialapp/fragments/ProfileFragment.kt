@@ -31,11 +31,11 @@ class ProfileFragment : Fragment() {
         setupRecyclerView()
 
         val data = arguments
-        val token = data?.get("token").toString()
+        val userId = data?.get("userId").toString()
 
         lifecycleScope.launchWhenCreated {
             val response = try {
-                RetrofitInstance.api.getUserPosts("Bearer $token")
+                RetrofitInstance.api.getUserPosts(userId)
             } catch(e: IOException) {
                 binding.userPostsMessage.text = "You might not have internet connection"
                 return@launchWhenCreated

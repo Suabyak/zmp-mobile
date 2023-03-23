@@ -16,25 +16,29 @@ class DashboardActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDashboardBinding.inflate(LayoutInflater.from(this))
-        val sharedPreferences: SharedPreferences = this.getSharedPreferences("jwt", Context.MODE_PRIVATE)
+        val sharedPreferences: SharedPreferences = this.getSharedPreferences("prefs", Context.MODE_PRIVATE)
         setContentView(binding.root)
 
         val token = sharedPreferences.getString("jwt", null)
+        val userId = sharedPreferences.getString("userId", null)
 
-        val bundle = Bundle()
-        bundle.putString("token", token)
+        val bundleToken = Bundle()
+        val bundleUserId = Bundle()
+
+        bundleToken.putString("token", token)
+        bundleUserId.putString("userId", userId)
 
         val homeFragment = HomeFragment()
         val createFragment = CreateFragment()
         val profileFragment = ProfileFragment()
 
-        homeFragment.arguments = bundle
+        homeFragment.arguments = bundleToken
         setFragment(homeFragment)
 
         binding.navigationId.setOnItemSelectedListener {
             when(it.itemId) {
                 R.id.home -> {
-                    homeFragment.arguments = bundle
+                    homeFragment.arguments = bundleToken
                     setFragment(homeFragment)
                 }
 
@@ -44,12 +48,12 @@ class DashboardActivity : AppCompatActivity() {
 //                }
 
                 R.id.add -> {
-                    createFragment.arguments = bundle
+                    createFragment.arguments = bundleToken
                     setFragment(createFragment)
                 }
 
                 R.id.profile -> {
-                    profileFragment.arguments = bundle
+                    profileFragment.arguments = bundleUserId
                     setFragment(profileFragment)
                 }
             }

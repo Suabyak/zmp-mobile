@@ -11,6 +11,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface AuthApi {
     @POST("/user/signinspecial")
@@ -21,5 +22,5 @@ interface AuthApi {
                            @Header("Authorization") token: String): Response<CreatePostResponse>
 
     @GET("/posts/getUserPostsSpecial")
-    suspend fun getUserPosts(@Header("Authorization") token: String): Response<List<PostResponse>>
+    suspend fun getUserPosts(@Query("key") key: String): Response<List<PostResponse>>
 }

@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(LayoutInflater.from(this))
-        val sharedPreferences: SharedPreferences = this.getSharedPreferences("jwt", MODE_PRIVATE)
+        val sharedPreferences: SharedPreferences = this.getSharedPreferences("prefs", MODE_PRIVATE)
         setContentView(binding.root)
 
         binding.singupTextLogin.setOnClickListener {
@@ -52,6 +52,9 @@ class MainActivity : AppCompatActivity() {
                     if(response.isSuccessful && response.body() != null) {
                         sharedPreferences.edit()
                             .putString("jwt", response.body()!!.message)
+                            .apply()
+                        sharedPreferences.edit()
+                            .putString("userId", response.body()!!.userId)
                             .apply()
                         val intent = Intent(this@MainActivity, DashboardActivity::class.java)
                         startActivity(intent)
