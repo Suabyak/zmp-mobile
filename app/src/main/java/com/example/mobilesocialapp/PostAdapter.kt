@@ -1,11 +1,5 @@
 package com.example.mobilesocialapp
 
-import android.app.PendingIntent.getActivity
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.net.Uri
-import android.provider.MediaStore
-import android.util.Base64
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
@@ -13,10 +7,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mobilesocialapp.databinding.PostBinding
 import com.example.mobilesocialapp.response.PostResponse
-import java.io.ByteArrayOutputStream
+import okio.ByteString.Companion.decodeBase64
 
 
 class PostAdapter : RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
+    private val decodeBase64String = DecodeBase64String()
 
     inner class PostViewHolder(val binding: PostBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -48,19 +43,11 @@ class PostAdapter : RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
         ))
     }
 
-    private fun decodeBase64(imageString: String): Bitmap {
-        val imageBytes = Base64.decode(imageString, Base64.DEFAULT)
-        val decodedImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
-
-        return decodedImage
-    }
-
-
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
         holder.binding.apply {
             val currentPost = posts[position]
             postUsername.text = currentPost.username
-            postImg.setImageBitmap(decodeBase64(currentPost.selectedFile))
+            postImg.setImageBitmap(decodeBase64String.decodeBase64(currentPost.selectedFile))
             postLikesNumber.text = currentPost.likes.size.toString()
             postMainText.text = currentPost.message
         }
