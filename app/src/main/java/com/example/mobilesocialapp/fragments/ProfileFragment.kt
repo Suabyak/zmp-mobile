@@ -1,6 +1,5 @@
 package com.example.mobilesocialapp.fragments
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,9 +8,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mobilesocialapp.*
-import com.example.mobilesocialapp.databinding.FragmentCreateBinding
 import com.example.mobilesocialapp.databinding.FragmentProfileBinding
-import com.example.mobilesocialapp.request.AuthRequest
 import retrofit2.HttpException
 import java.io.IOException
 
@@ -26,10 +23,11 @@ class ProfileFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
-        setupRecyclerView()
 
         val data = arguments
         val userId = data?.get("userId").toString()
+
+        setupRecyclerView(userId)
 
         lifecycleScope.launchWhenCreated {
             val response = try {
@@ -73,8 +71,8 @@ class ProfileFragment : Fragment() {
         return binding.root
     }
 
-    private fun setupRecyclerView() = binding.rvPosts.apply {
-        postAdapter = PostAdapter()
+    private fun setupRecyclerView(userId: String) = binding.rvPosts.apply {
+        postAdapter = PostAdapter(userId)
         adapter = postAdapter
         layoutManager = LinearLayoutManager(this@ProfileFragment.context)
     }

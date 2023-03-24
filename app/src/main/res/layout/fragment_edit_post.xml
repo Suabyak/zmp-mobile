@@ -4,15 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.CreateFragment">
+    tools:context=".fragments.EditPostFragment">
 
     <EditText
         android:id="@+id/descriptionInput"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
         android:hint="Post Description"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -31,14 +28,14 @@
         app:layout_constraintTop_toBottomOf="@+id/descriptionInput" />
 
     <Button
-        android:id="@+id/createPostButton"
+        android:id="@+id/editPostButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="33dp"
         android:layout_marginEnd="20dp"
         android:backgroundTint="@color/main_color"
-        android:text="Create Post"
+        android:text="Edit Post"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imageButton"
         app:layout_constraintTop_toBottomOf="@+id/descriptionInput" />
@@ -56,10 +53,10 @@
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/createPostMessage" />
+        app:layout_constraintTop_toBottomOf="@+id/editPostMessage" />
 
     <TextView
-        android:id="@+id/createPostMessage"
+        android:id="@+id/editPostMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="56dp"
@@ -68,6 +65,6 @@
         android:textColor="#FF0000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/createPostButton" />
+        app:layout_constraintTop_toBottomOf="@+id/editPostButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

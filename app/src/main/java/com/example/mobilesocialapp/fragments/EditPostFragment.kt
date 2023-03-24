@@ -8,22 +8,25 @@ import android.net.Uri
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Base64
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import com.example.mobilesocialapp.DecodeBase64String
 import com.example.mobilesocialapp.RetrofitInstance
-import com.example.mobilesocialapp.databinding.FragmentCreateBinding
+import com.example.mobilesocialapp.databinding.FragmentEditPostBinding
 import com.example.mobilesocialapp.request.CreatePostRequest
+import com.example.mobilesocialapp.request.EditPostRequest
 import retrofit2.HttpException
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 
-class CreateFragment : Fragment() {
-    private var _binding: FragmentCreateBinding? = null
+class EditPostFragment(val postId: String) : Fragment() {
+    private var _binding: FragmentEditPostBinding? = null
     private val binding get() = _binding!!
+    private val decodeBase64String = DecodeBase64String()
     private lateinit var uri: Uri
     private lateinit var imageString: String
 
@@ -31,16 +34,33 @@ class CreateFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentCreateBinding.inflate(inflater, container, false)
+        _binding = FragmentEditPostBinding.inflate(inflater, container, false)
 
-        val data = arguments
-        val token = data?.get("token").toString()
+        lifecycleScope.launchWhenCreated {
+            val response = try {
+                RetrofitInstance.api.getPostById(postId)
+            } catch(e: IOException) {
+                binding.editPostMessage.text = "You might not have internet connection"
+                return@launchWhenCreated
+            } catch(e: HttpException) {
+                binding.editPostMessage.text = "Unexpected response"
+                return@launchWhenCreated
+            }
+
+            if(response.isSuccessful && response.body() != null) {
+                binding.descriptionInput.setText(response.body()!!.message)
+                binding.imageView.setImageBitmap(decodeBase64String.decodeBase64(response.body()!!.selectedFile))
+                imageString = response.body()!!.selectedFile
+            } else {
+                binding.editPostMessage.text = "Cant retrieve this post"
+            }
+        }
 
         binding.imageButton.setOnClickListener() {
             uploadImage(binding.imageView)
         }
 
-        binding.createPostButton.setOnClickListener {
+        binding.editPostButton.setOnClickListener {
             val descriptionInput = binding.descriptionInput.text.toString()
 
             if(TextUtils.isEmpty(descriptionInput)) {
@@ -48,20 +68,20 @@ class CreateFragment : Fragment() {
             } else {
                 lifecycleScope.launchWhenCreated {
                     val response = try {
-                        val newCreatePostRequest = CreatePostRequest(descriptionInput, imageString)
-                        RetrofitInstance.api.createPost(newCreatePostRequest, "Bearer $token")
+                        val newEditPostRequest = EditPostRequest(postId, descriptionInput, imageString)
+                        RetrofitInstance.api.updatePost(newEditPostRequest)
                     } catch(e: IOException) {
-                        binding.createPostMessage.text = "You might not have internet connection"
+                        binding.editPostMessage.text = "You might not have internet connection"
                         return@launchWhenCreated
                     } catch(e: HttpException) {
-                        binding.createPostMessage.text = "Unexpected response"
+                        binding.editPostMessage.text = "Unexpected response"
                         return@launchWhenCreated
                     }
 
                     if(response.isSuccessful && response.body() != null) {
-                        binding.createPostMessage.text = "Post created successfully"
+                        binding.editPostMessage.text = "Post updated successfully"
                     } else {
-                        binding.createPostMessage.text = "Post not created! Try again"
+                        binding.editPostMessage.text = "Post not updated! Try again"
                     }
                 }
             }
