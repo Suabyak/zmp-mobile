@@ -16,7 +16,7 @@ class DashboardActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDashboardBinding.inflate(LayoutInflater.from(this))
-        val sharedPreferences: SharedPreferences = this.getSharedPreferences("prefs", Context.MODE_PRIVATE)
+        val sharedPreferences: SharedPreferences = this.getSharedPreferences("prefs", MODE_PRIVATE)
         setContentView(binding.root)
 
         val token = sharedPreferences.getString("jwt", null)
