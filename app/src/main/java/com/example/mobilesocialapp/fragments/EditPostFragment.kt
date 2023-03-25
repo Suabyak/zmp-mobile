@@ -14,10 +14,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.lifecycle.lifecycleScope
-import com.example.mobilesocialapp.DecodeBase64String
+import com.example.mobilesocialapp.utils.DecodeBase64String
 import com.example.mobilesocialapp.RetrofitInstance
 import com.example.mobilesocialapp.databinding.FragmentEditPostBinding
-import com.example.mobilesocialapp.request.CreatePostRequest
 import com.example.mobilesocialapp.request.EditPostRequest
 import retrofit2.HttpException
 import java.io.ByteArrayOutputStream

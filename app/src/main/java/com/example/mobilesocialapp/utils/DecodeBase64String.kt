@@ -1,4 +1,4 @@
-package com.example.mobilesocialapp
+package com.example.mobilesocialapp.utils
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory

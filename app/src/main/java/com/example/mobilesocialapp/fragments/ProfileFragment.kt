@@ -9,6 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mobilesocialapp.*
 import com.example.mobilesocialapp.databinding.FragmentProfileBinding
+import com.example.mobilesocialapp.utils.DecodeBase64String
 import retrofit2.HttpException
 import java.io.IOException
 

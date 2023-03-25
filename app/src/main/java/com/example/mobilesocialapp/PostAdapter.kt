@@ -3,18 +3,20 @@ package com.example.mobilesocialapp
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mobilesocialapp.databinding.PostBinding
 import com.example.mobilesocialapp.fragments.EditPostFragment
 import com.example.mobilesocialapp.response.PostsResponse
+import com.example.mobilesocialapp.utils.DecodeBase64String
+import com.example.mobilesocialapp.utils.RedirectToFragment
 
 
 class PostAdapter(val userId: String) : RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
     private val decodeBase64String = DecodeBase64String()
     private lateinit var editPostFragment: EditPostFragment
+    private val redirectToFragment = RedirectToFragment()
 
     inner class PostViewHolder(val binding: PostBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -61,9 +63,6 @@ class PostAdapter(val userId: String) : RecyclerView.Adapter<PostAdapter.PostVie
             }
         }
 
-        holder.binding.editPostBtn.setOnClickListener { v ->
-            val activity = v!!.context as AppCompatActivity
-            activity.supportFragmentManager.beginTransaction().replace(R.id.flFragment, editPostFragment).commit()
-        }
+        redirectToFragment.redirectToFragment(holder.binding.editPostBtn, editPostFragment)
     }
 }
