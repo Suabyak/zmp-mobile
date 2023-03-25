@@ -6,6 +6,7 @@ import com.example.mobilesocialapp.request.EditPostRequest
 import com.example.mobilesocialapp.response.*
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.PATCH
@@ -31,4 +32,7 @@ interface AuthApi {
 
     @PATCH("/posts/updatePostSpecial")
     suspend fun updatePost(@Body editPostRequest: EditPostRequest): Response<EditPostResponse>
+
+    @DELETE("/posts/deletePostSpecial")
+    suspend fun deletePostById(@Query("id") key: String): Response<DeletePostResponse>
 }

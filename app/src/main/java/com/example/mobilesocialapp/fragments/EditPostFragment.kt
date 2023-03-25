@@ -18,22 +18,31 @@ import com.example.mobilesocialapp.utils.DecodeBase64String
 import com.example.mobilesocialapp.RetrofitInstance
 import com.example.mobilesocialapp.databinding.FragmentEditPostBinding
 import com.example.mobilesocialapp.request.EditPostRequest
+import com.example.mobilesocialapp.utils.RedirectToFragment
 import retrofit2.HttpException
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 
-class EditPostFragment(val postId: String) : Fragment() {
+class EditPostFragment(val postId: String, val userId: String) : Fragment() {
     private var _binding: FragmentEditPostBinding? = null
     private val binding get() = _binding!!
     private val decodeBase64String = DecodeBase64String()
+    private val redirectToFragment = RedirectToFragment()
     private lateinit var uri: Uri
     private lateinit var imageString: String
+    private val profileFragment = ProfileFragment()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentEditPostBinding.inflate(inflater, container, false)
+
+        val bundleUserId = Bundle()
+        bundleUserId.putString("userId", userId)
+        profileFragment.arguments = bundleUserId
+
+        redirectToFragment.redirectToFragment(binding.comeBackImg, profileFragment)
 
         lifecycleScope.launchWhenCreated {
             val response = try {
