@@ -22,23 +22,22 @@ class DashboardActivity : AppCompatActivity() {
         val token = sharedPreferences.getString("jwt", null)
         val userId = sharedPreferences.getString("userId", null)
 
-        val bundleToken = Bundle()
-        val bundleUserId = Bundle()
+        val bundleData = Bundle()
 
-        bundleToken.putString("token", token)
-        bundleUserId.putString("userId", userId)
+        bundleData.putString("token", token)
+        bundleData.putString("userId", userId)
 
         val homeFragment = HomeFragment()
         val createFragment = CreateFragment()
         val profileFragment = ProfileFragment()
 
-        homeFragment.arguments = bundleToken
+        homeFragment.arguments = bundleData
         setFragment(homeFragment)
 
         binding.navigationId.setOnItemSelectedListener {
             when(it.itemId) {
                 R.id.home -> {
-                    homeFragment.arguments = bundleToken
+                    homeFragment.arguments = bundleData
                     setFragment(homeFragment)
                 }
 
@@ -48,12 +47,12 @@ class DashboardActivity : AppCompatActivity() {
 //                }
 
                 R.id.add -> {
-                    createFragment.arguments = bundleToken
+                    createFragment.arguments = bundleData
                     setFragment(createFragment)
                 }
 
                 R.id.profile -> {
-                    profileFragment.arguments = bundleUserId
+                    profileFragment.arguments = bundleData
                     setFragment(profileFragment)
                 }
             }

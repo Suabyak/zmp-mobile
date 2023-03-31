@@ -1,5 +1,6 @@
 package com.example.mobilesocialapp
 
+import com.example.mobilesocialapp.request.AddCommentRequest
 import com.example.mobilesocialapp.request.AuthRequest
 import com.example.mobilesocialapp.request.CreatePostRequest
 import com.example.mobilesocialapp.request.EditPostRequest
@@ -35,4 +36,10 @@ interface AuthApi {
 
     @DELETE("/posts/deletePostSpecial")
     suspend fun deletePostById(@Query("id") key: String): Response<DeletePostResponse>
+
+    @GET("/posts/getCommentsByIdSpecial")
+    suspend fun getComments(@Query("id") key: String): Response<List<CommentsResponse>>
+
+    @POST("/posts/addComment")
+    suspend fun addComment(@Query("id") key: String, @Header("Authorization") token: String, @Body addCommentRequest: AddCommentRequest): Response<AddCommentResponse>
 }
