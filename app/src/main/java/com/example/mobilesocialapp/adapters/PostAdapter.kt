@@ -1,4 +1,4 @@
-package com.example.mobilesocialapp
+package com.example.mobilesocialapp.adapters
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mobilesocialapp.databinding.PostBinding
+import com.example.mobilesocialapp.fragments.CommentsFragment
 import com.example.mobilesocialapp.fragments.DeletePostFragment
 import com.example.mobilesocialapp.fragments.EditPostFragment
 import com.example.mobilesocialapp.response.PostsResponse
@@ -14,10 +15,11 @@ import com.example.mobilesocialapp.utils.DecodeBase64String
 import com.example.mobilesocialapp.utils.RedirectToFragment
 
 
-class PostAdapter(val userId: String) : RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
+class PostAdapter(val userId: String, val token: String) : RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
     private val decodeBase64String = DecodeBase64String()
     private lateinit var editPostFragment: EditPostFragment
     private lateinit var deletePostFragment: DeletePostFragment
+    private lateinit var commentsFragment: CommentsFragment
     private val redirectToFragment = RedirectToFragment()
 
     inner class PostViewHolder(val binding: PostBinding) : RecyclerView.ViewHolder(binding.root)
@@ -55,6 +57,7 @@ class PostAdapter(val userId: String) : RecyclerView.Adapter<PostAdapter.PostVie
             val currentPost = posts[position]
             editPostFragment = EditPostFragment(currentPost._id, userId)
             deletePostFragment = DeletePostFragment(currentPost._id, userId)
+            commentsFragment = CommentsFragment(currentPost._id, userId, token)
 
             postUsername.text = currentPost.username
             postImg.setImageBitmap(decodeBase64String.decodeBase64(currentPost.selectedFile))
@@ -69,5 +72,6 @@ class PostAdapter(val userId: String) : RecyclerView.Adapter<PostAdapter.PostVie
 
         redirectToFragment.redirectToFragment(holder.binding.editPostBtn, editPostFragment)
         redirectToFragment.redirectToFragment(holder.binding.deletePostBtn, deletePostFragment)
+        redirectToFragment.redirectToFragment(holder.binding.postCommentImg, commentsFragment)
     }
 }

@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mobilesocialapp.*
+import com.example.mobilesocialapp.adapters.PostAdapter
 import com.example.mobilesocialapp.databinding.FragmentProfileBinding
 import com.example.mobilesocialapp.utils.DecodeBase64String
 import retrofit2.HttpException
@@ -27,8 +28,9 @@ class ProfileFragment : Fragment() {
 
         val data = arguments
         val userId = data?.get("userId").toString()
+        val token = data?.get("token").toString()
 
-        setupRecyclerView(userId)
+        setupRecyclerView(userId, token)
 
         lifecycleScope.launchWhenCreated {
             val response = try {
@@ -72,8 +74,8 @@ class ProfileFragment : Fragment() {
         return binding.root
     }
 
-    private fun setupRecyclerView(userId: String) = binding.rvPosts.apply {
-        postAdapter = PostAdapter(userId)
+    private fun setupRecyclerView(userId: String, token: String) = binding.rvPosts.apply {
+        postAdapter = PostAdapter(userId, token)
         adapter = postAdapter
         layoutManager = LinearLayoutManager(this@ProfileFragment.context)
     }
