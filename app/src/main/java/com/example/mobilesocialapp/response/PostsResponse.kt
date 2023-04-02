@@ -6,5 +6,5 @@ data class PostsResponse(
     val username: String,
     val creator: String,
     val selectedFile: String,
-    val likes: List<String>
+    val likes: ArrayList<String>
 )
