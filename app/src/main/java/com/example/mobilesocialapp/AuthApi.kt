@@ -42,4 +42,7 @@ interface AuthApi {
 
     @POST("/posts/addComment")
     suspend fun addComment(@Query("id") key: String, @Header("Authorization") token: String, @Body addCommentRequest: AddCommentRequest): Response<AddCommentResponse>
+
+    @PATCH("/posts/likePostSpecial")
+    suspend fun likePost(@Query("id") key: String, @Header("Authorization") token: String): Response<LikePostResponse>
 }
