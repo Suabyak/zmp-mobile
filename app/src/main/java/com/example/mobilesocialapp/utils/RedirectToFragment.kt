@@ -1,5 +1,6 @@
 package com.example.mobilesocialapp.utils
 
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
@@ -7,17 +8,9 @@ import androidx.fragment.app.Fragment
 import com.example.mobilesocialapp.R
 
 class RedirectToFragment {
-    fun redirectToFragment(imageView: ImageView, fragment: Fragment) {
-        imageView.setOnClickListener { v ->
-            val activity = v!!.context as AppCompatActivity
-            activity.supportFragmentManager.beginTransaction().replace(R.id.flFragment, fragment).commit()
-        }
-    }
 
-    fun redirectToFragmentByButton(button: Button, fragment: Fragment) {
-        button.setOnClickListener { v ->
-            val activity = v!!.context as AppCompatActivity
-            activity.supportFragmentManager.beginTransaction().replace(R.id.flFragment, fragment).commit()
-        }
+    fun redirect(v: View, fragment: Fragment) {
+        val a = v!!.context as AppCompatActivity
+        a.supportFragmentManager.beginTransaction().replace(R.id.flFragment, fragment).commit()
     }
 }

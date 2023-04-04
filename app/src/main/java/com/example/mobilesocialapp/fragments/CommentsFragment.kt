@@ -7,14 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.mobilesocialapp.R
 import com.example.mobilesocialapp.RetrofitInstance
 import com.example.mobilesocialapp.adapters.CommentAdapter
-import com.example.mobilesocialapp.adapters.PostAdapter
 import com.example.mobilesocialapp.databinding.FragmentCommentsBinding
 import com.example.mobilesocialapp.request.AddCommentRequest
-import com.example.mobilesocialapp.response.CommentsResponse
 import com.example.mobilesocialapp.utils.RedirectToFragment
+import com.example.mobilesocialapp.utils.ReturnBundleData
 import retrofit2.HttpException
 import java.io.IOException
 
@@ -24,6 +22,7 @@ class CommentsFragment(val postId: String, val userId: String, val token: String
     private lateinit var commentAdapter: CommentAdapter
     private val profileFragment = ProfileFragment()
     private val redirectToFragment = RedirectToFragment()
+    private val returnBundleData = ReturnBundleData()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,11 +32,11 @@ class CommentsFragment(val postId: String, val userId: String, val token: String
 
         setupRecyclerView()
 
-        val bundleUserId = Bundle()
-        bundleUserId.putString("userId", userId)
-        profileFragment.arguments = bundleUserId
+        returnBundleData.returnData(userId, token, profileFragment)
 
-        redirectToFragment.redirectToFragment(binding.comeBackImg, profileFragment)
+        binding.comeBackImg.setOnClickListener { v ->
+            redirectToFragment.redirect(v, profileFragment)
+        }
 
         binding.sendComment.setOnClickListener {
             val commentValue = binding.commentInput.text.toString()

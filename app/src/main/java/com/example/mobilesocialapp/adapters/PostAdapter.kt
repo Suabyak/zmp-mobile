@@ -76,8 +76,8 @@ class PostAdapter(val userId: String, val token: String) : RecyclerView.Adapter<
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
         holder.binding.apply {
             val currentPost = posts[position]
-            editPostFragment = EditPostFragment(currentPost._id, userId)
-            deletePostFragment = DeletePostFragment(currentPost._id, userId)
+            editPostFragment = EditPostFragment(currentPost._id, userId, token)
+            deletePostFragment = DeletePostFragment(currentPost._id, userId, token)
             commentsFragment = CommentsFragment(currentPost._id, userId, token)
 
             postUsername.text = currentPost.username
@@ -103,10 +103,18 @@ class PostAdapter(val userId: String, val token: String) : RecyclerView.Adapter<
             postLikedImg.setOnClickListener {
                 checkIsLiked(postLikeImg, postLikedImg, currentPost.likes, postLikesNumber, currentPost._id)
             }
-        }
 
-        redirectToFragment.redirectToFragment(holder.binding.editPostBtn, editPostFragment)
-        redirectToFragment.redirectToFragment(holder.binding.deletePostBtn, deletePostFragment)
-        redirectToFragment.redirectToFragment(holder.binding.postCommentImg, commentsFragment)
+            postCommentImg.setOnClickListener { v ->
+                redirectToFragment.redirect(v, commentsFragment)
+            }
+
+            editPostBtn.setOnClickListener { v ->
+                redirectToFragment.redirect(v, editPostFragment)
+            }
+
+            deletePostBtn.setOnClickListener { v ->
+                redirectToFragment.redirect(v, deletePostFragment)
+            }
+        }
     }
 }

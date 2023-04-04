@@ -14,14 +14,16 @@ import com.example.mobilesocialapp.RetrofitInstance
 import com.example.mobilesocialapp.databinding.FragmentDeletePostBinding
 import com.example.mobilesocialapp.databinding.FragmentProfileBinding
 import com.example.mobilesocialapp.utils.RedirectToFragment
+import com.example.mobilesocialapp.utils.ReturnBundleData
 import retrofit2.HttpException
 import java.io.IOException
 
-class DeletePostFragment(val postId: String, val userId: String) : Fragment() {
+class DeletePostFragment(val postId: String, val userId: String, val token: String) : Fragment() {
     private var _binding: FragmentDeletePostBinding? = null
     private val binding get() = _binding!!
     private val redirectToFragment = RedirectToFragment()
     private val profileFragment = ProfileFragment()
+    private val returnBundleData = ReturnBundleData()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,12 +31,15 @@ class DeletePostFragment(val postId: String, val userId: String) : Fragment() {
     ): View? {
         _binding = FragmentDeletePostBinding.inflate(inflater, container, false)
 
-        val bundleUserId = Bundle()
-        bundleUserId.putString("userId", userId)
-        profileFragment.arguments = bundleUserId
+        returnBundleData.returnData(userId, token, profileFragment)
 
-        redirectToFragment.redirectToFragment(binding.comeBackImg, profileFragment)
-        redirectToFragment.redirectToFragmentByButton(binding.deletePostNo, profileFragment)
+        binding.comeBackImg.setOnClickListener { v ->
+            redirectToFragment.redirect(v, profileFragment)
+        }
+
+        binding.deletePostNo.setOnClickListener { v ->
+            redirectToFragment.redirect(v, profileFragment)
+        }
 
         binding.deletePostYes.setOnClickListener {
             lifecycleScope.launchWhenCreated {
