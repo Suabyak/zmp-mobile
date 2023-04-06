@@ -34,7 +34,7 @@ class DeletePostFragment(val postId: String, val userId: String, val token: Stri
         returnBundleData.returnData(userId, token, profileFragment)
 
         binding.comeBackImg.setOnClickListener { v ->
-            redirectToFragment.redirect(v, profileFragment)
+            redirectToFragment.redirect(binding.root, profileFragment)
         }
 
         binding.deletePostNo.setOnClickListener { v ->

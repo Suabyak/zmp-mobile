@@ -76,9 +76,6 @@ class PostAdapter(val userId: String, val token: String) : RecyclerView.Adapter<
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
         holder.binding.apply {
             val currentPost = posts[position]
-            editPostFragment = EditPostFragment(currentPost._id, userId, token)
-            deletePostFragment = DeletePostFragment(currentPost._id, userId, token)
-            commentsFragment = CommentsFragment(currentPost._id, userId, token)
 
             postUsername.text = currentPost.username
             postImg.setImageBitmap(decodeBase64String.decodeBase64(currentPost.selectedFile))
@@ -105,14 +102,17 @@ class PostAdapter(val userId: String, val token: String) : RecyclerView.Adapter<
             }
 
             postCommentImg.setOnClickListener { v ->
+                commentsFragment = CommentsFragment(currentPost._id, userId, token)
                 redirectToFragment.redirect(v, commentsFragment)
             }
 
             editPostBtn.setOnClickListener { v ->
+                editPostFragment = EditPostFragment(currentPost._id, userId, token)
                 redirectToFragment.redirect(v, editPostFragment)
             }
 
             deletePostBtn.setOnClickListener { v ->
+                deletePostFragment = DeletePostFragment(currentPost._id, userId, token)
                 redirectToFragment.redirect(v, deletePostFragment)
             }
         }

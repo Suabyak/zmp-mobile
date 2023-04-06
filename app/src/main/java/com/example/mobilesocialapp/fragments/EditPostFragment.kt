@@ -74,7 +74,7 @@ class EditPostFragment(val postId: String, val userId: String, val token: String
             val descriptionInput = binding.descriptionInput.text.toString()
 
             if(TextUtils.isEmpty(descriptionInput)) {
-                binding.descriptionInput.setError("Please enter description")
+                binding.descriptionInput.error = "Please enter description"
             } else {
                 lifecycleScope.launchWhenCreated {
                     val response = try {

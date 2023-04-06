@@ -18,6 +18,9 @@ interface AuthApi {
     @POST("/user/signinspecial")
     suspend fun signIn(@Body authRequest: AuthRequest): Response<AuthResponse>
 
+    @GET("/user/getUsersBySearchSpecial")
+    suspend fun getUsersBySearch(@Query("search") key: String): Response<List<UsersBySearchResponse>>
+
     @POST("/posts/createPost")
     suspend fun createPost(@Body createPostRequest: CreatePostRequest,
                            @Header("Authorization") token: String): Response<CreatePostResponse>
@@ -43,6 +46,5 @@ interface AuthApi {
     @POST("/posts/addComment")
     suspend fun addComment(@Query("id") key: String, @Header("Authorization") token: String, @Body addCommentRequest: AddCommentRequest): Response<AddCommentResponse>
 
-    @PATCH("/posts/likePostSpecial")
-    suspend fun likePost(@Query("id") key: String, @Header("Authorization") token: String): Response<LikePostResponse>
+
 }

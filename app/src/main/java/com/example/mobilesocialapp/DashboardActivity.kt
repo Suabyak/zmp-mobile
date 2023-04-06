@@ -10,6 +10,7 @@ import com.example.mobilesocialapp.databinding.ActivityDashboardBinding
 import com.example.mobilesocialapp.fragments.CreateFragment
 import com.example.mobilesocialapp.fragments.HomeFragment
 import com.example.mobilesocialapp.fragments.ProfileFragment
+import com.example.mobilesocialapp.fragments.SearchedUsersFragment
 
 class DashboardActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDashboardBinding
@@ -28,6 +29,7 @@ class DashboardActivity : AppCompatActivity() {
         bundleData.putString("userId", userId)
 
         val homeFragment = HomeFragment()
+        val searchedUsersFragment = SearchedUsersFragment()
         val createFragment = CreateFragment()
         val profileFragment = ProfileFragment()
 
@@ -41,10 +43,10 @@ class DashboardActivity : AppCompatActivity() {
                     setFragment(homeFragment)
                 }
 
-//                R.id.search -> {
-//                    val intent = Intent(this, CreateActivity::class.java)
-//                    startActivity(intent)
-//                }
+                R.id.search -> {
+                    searchedUsersFragment.arguments = bundleData
+                    setFragment(searchedUsersFragment)
+                }
 
                 R.id.add -> {
                     createFragment.arguments = bundleData
