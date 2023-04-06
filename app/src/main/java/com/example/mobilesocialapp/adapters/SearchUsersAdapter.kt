@@ -1,6 +1,5 @@
 package com.example.mobilesocialapp.adapters
 
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
@@ -14,7 +13,7 @@ import com.example.mobilesocialapp.utils.RedirectToFragment
 
 class SearchUsersAdapter(val userId: String, val token: String) : RecyclerView.Adapter<SearchUsersAdapter.SearchedUserViewHolder>() {
     private val decodeBase64String = DecodeBase64String()
-    private val profileFragment = ProfileFragment()
+    private lateinit var profileFragment: ProfileFragment
     private val redirectToFragment = RedirectToFragment()
 
     inner class SearchedUserViewHolder(val binding: SearchedUserBinding) : RecyclerView.ViewHolder(binding.root)
@@ -52,12 +51,6 @@ class SearchUsersAdapter(val userId: String, val token: String) : RecyclerView.A
         holder.binding.apply {
             val currentUser = users[position]
 
-            val bundleData = Bundle()
-
-            bundleData.putString("token", token)
-
-            profileFragment.arguments = bundleData
-
             username.text = currentUser.username
 
             if(currentUser.selectedFile.isNotEmpty()){
@@ -65,7 +58,12 @@ class SearchUsersAdapter(val userId: String, val token: String) : RecyclerView.A
             }
 
             username.setOnClickListener { v ->
-                bundleData.putString("userId", currentUser._id)
+                profileFragment = ProfileFragment(userId, currentUser._id, token)
+                redirectToFragment.redirect(v, profileFragment)
+            }
+
+            userProfileImg.setOnClickListener { v ->
+                profileFragment = ProfileFragment(userId, currentUser._id, token)
                 redirectToFragment.redirect(v, profileFragment)
             }
         }

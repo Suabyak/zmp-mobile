@@ -1,6 +1,5 @@
 package com.example.mobilesocialapp
 
-import android.content.Context
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -14,6 +13,7 @@ import com.example.mobilesocialapp.fragments.SearchedUsersFragment
 
 class DashboardActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDashboardBinding
+    private lateinit var profileFragment: ProfileFragment
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDashboardBinding.inflate(LayoutInflater.from(this))
@@ -31,7 +31,10 @@ class DashboardActivity : AppCompatActivity() {
         val homeFragment = HomeFragment()
         val searchedUsersFragment = SearchedUsersFragment()
         val createFragment = CreateFragment()
-        val profileFragment = ProfileFragment()
+
+        if(userId != null && token != null) {
+            profileFragment = ProfileFragment(userId, userId, token)
+        }
 
         homeFragment.arguments = bundleData
         setFragment(homeFragment)
@@ -54,7 +57,7 @@ class DashboardActivity : AppCompatActivity() {
                 }
 
                 R.id.profile -> {
-                    profileFragment.arguments = bundleData
+//                    profileFragment.arguments = bundleData
                     setFragment(profileFragment)
                 }
             }

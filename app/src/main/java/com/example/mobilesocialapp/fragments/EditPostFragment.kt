@@ -19,7 +19,6 @@ import com.example.mobilesocialapp.RetrofitInstance
 import com.example.mobilesocialapp.databinding.FragmentEditPostBinding
 import com.example.mobilesocialapp.request.EditPostRequest
 import com.example.mobilesocialapp.utils.RedirectToFragment
-import com.example.mobilesocialapp.utils.ReturnBundleData
 import retrofit2.HttpException
 import java.io.ByteArrayOutputStream
 import java.io.IOException
@@ -31,16 +30,13 @@ class EditPostFragment(val postId: String, val userId: String, val token: String
     private val redirectToFragment = RedirectToFragment()
     private lateinit var uri: Uri
     private lateinit var imageString: String
-    private val profileFragment = ProfileFragment()
-    private val returnBundleData = ReturnBundleData()
+    private val profileFragment = ProfileFragment(userId, userId, token)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentEditPostBinding.inflate(inflater, container, false)
-
-        returnBundleData.returnData(userId, token, profileFragment)
 
         binding.comeBackImg.setOnClickListener { v ->
             redirectToFragment.redirect(v, profileFragment)

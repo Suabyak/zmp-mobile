@@ -14,23 +14,18 @@ import com.example.mobilesocialapp.utils.DecodeBase64String
 import retrofit2.HttpException
 import java.io.IOException
 
-class ProfileFragment : Fragment() {
+class ProfileFragment(val currentLoggedUserId: String, val userId: String, val token: String) : Fragment() {
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
     private lateinit var postAdapter: PostAdapter
     private val decodeBase64String = DecodeBase64String()
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
 
-        val data = arguments
-        val userId = data?.get("userId").toString()
-        val token = data?.get("token").toString()
-
-        setupRecyclerView(userId, token)
+        setupRecyclerView(currentLoggedUserId, userId, token)
 
         lifecycleScope.launchWhenCreated {
             val response = try {
@@ -74,8 +69,8 @@ class ProfileFragment : Fragment() {
         return binding.root
     }
 
-    private fun setupRecyclerView(userId: String, token: String) = binding.rvPosts.apply {
-        postAdapter = PostAdapter(userId, token)
+    private fun setupRecyclerView(currentLoggedUserId: String, userId: String, token: String) = binding.rvPosts.apply {
+        postAdapter = PostAdapter(currentLoggedUserId, userId, token)
         adapter = postAdapter
         layoutManager = LinearLayoutManager(this@ProfileFragment.context)
     }
