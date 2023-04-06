@@ -26,15 +26,15 @@ class SignupActivity : AppCompatActivity() {
             val username = binding.usernameSignupText.text.toString()
 
             if(!isValidateEmail(email)) {
-                binding.emailSignUpText.setError("Invalid email address")
+                binding.emailSignUpText.error = "Invalid email address"
             } else if(password.length < 8) {
-                binding.passwordSignupText.setError("Password must contains at least 8 characters")
+                binding.passwordSignupText.error = "Password must contains at least 8 characters"
             } else if(username.isEmpty()) {
-                binding.usernameSignupText.setError("Please enter username")
+                binding.usernameSignupText.error = "Please enter username"
             } else if(!password.contains("[A-Z]".toRegex())) {
-                binding.passwordSignupText.setError("Password must contains at least one big letter")
+                binding.passwordSignupText.error = "Password must contains at least one big letter"
             } else if(!password.contains("[0-9]".toRegex())) {
-                binding.passwordSignupText.setError("Password must contains at least one number")
+                binding.passwordSignupText.error = "Password must contains at least one number"
             } else {
                 println("correct")
             }

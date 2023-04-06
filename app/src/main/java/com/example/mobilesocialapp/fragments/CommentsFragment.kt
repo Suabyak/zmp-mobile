@@ -12,17 +12,15 @@ import com.example.mobilesocialapp.adapters.CommentAdapter
 import com.example.mobilesocialapp.databinding.FragmentCommentsBinding
 import com.example.mobilesocialapp.request.AddCommentRequest
 import com.example.mobilesocialapp.utils.RedirectToFragment
-import com.example.mobilesocialapp.utils.ReturnBundleData
 import retrofit2.HttpException
 import java.io.IOException
 
-class CommentsFragment(val postId: String, val userId: String, val token: String) : Fragment() {
+class CommentsFragment(val postId: String, val currentLoggedUserId: String, val userId: String, val token: String) : Fragment() {
     private var _binding: FragmentCommentsBinding? = null
     private val binding get() = _binding!!
     private lateinit var commentAdapter: CommentAdapter
-    private val profileFragment = ProfileFragment()
+    private val profileFragment = ProfileFragment(currentLoggedUserId, userId, token)
     private val redirectToFragment = RedirectToFragment()
-    private val returnBundleData = ReturnBundleData()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,8 +29,6 @@ class CommentsFragment(val postId: String, val userId: String, val token: String
         _binding = FragmentCommentsBinding.inflate(inflater, container, false)
 
         setupRecyclerView()
-
-        returnBundleData.returnData(userId, token, profileFragment)
 
         binding.comeBackImg.setOnClickListener { v ->
             redirectToFragment.redirect(v, profileFragment)

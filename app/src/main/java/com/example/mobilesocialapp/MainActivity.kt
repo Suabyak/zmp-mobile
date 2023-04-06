@@ -32,9 +32,9 @@ class MainActivity : AppCompatActivity() {
             val password = binding.passwordLoginText.text.toString()
 
             if(TextUtils.isEmpty(username)) {
-                binding.usernameLoginText.setError("Please enter username")
+                binding.usernameLoginText.error = "Please enter username"
             } else if(TextUtils.isEmpty(password)) {
-                binding.passwordLoginText.setError("Please enter password")
+                binding.passwordLoginText.error = "Please enter password"
             } else {
                 binding.loginMessage.text = ""
                 lifecycleScope.launchWhenCreated {
