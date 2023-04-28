@@ -26,10 +26,10 @@ interface AuthApi {
                            @Header("Authorization") token: String): Response<CreatePostResponse>
 
     @GET("/posts/getUserPostsSpecial")
-    suspend fun getUserPosts(@Query("key") key: String): Response<List<PostsResponse>>
+    suspend fun getUserPosts(@Query("id") key: String): Response<List<PostsResponse>>
 
     @GET("/user/getUserDataProfileSpecial")
-    suspend fun getUserDataProfile(@Query("key") key: String): Response<UserDataProfileResponse>
+    suspend fun getUserDataProfile(@Query("id") key: String): Response<UserDataProfileResponse>
 
     @GET("/posts/getPostByIdSpecial")
     suspend fun getPostById(@Query("id") key: String): Response<PostResponse>
