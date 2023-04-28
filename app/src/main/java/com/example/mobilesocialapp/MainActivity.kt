@@ -4,12 +4,11 @@ import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.TextUtils
 import android.view.LayoutInflater
 import androidx.lifecycle.lifecycleScope
 import com.example.mobilesocialapp.databinding.ActivityMainBinding
 import com.example.mobilesocialapp.request.AuthRequest
-import com.example.mobilesocialapp.validations.emptyInput
+import com.example.mobilesocialapp.validations.EmptyInput
 import retrofit2.HttpException
 import java.io.IOException
 
@@ -17,7 +16,7 @@ const val TAG = "MainActivity"
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private val emptyInput = emptyInput()
+    private val emptyInput = EmptyInput()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(LayoutInflater.from(this))

@@ -5,16 +5,16 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import com.example.mobilesocialapp.databinding.ActivitySignupBinding
-import com.example.mobilesocialapp.validations.emailValidate
-import com.example.mobilesocialapp.validations.emptyInput
-import com.example.mobilesocialapp.validations.passwordValidate
+import com.example.mobilesocialapp.validations.EmailValidate
+import com.example.mobilesocialapp.validations.EmptyInput
+import com.example.mobilesocialapp.validations.PasswordValidate
 import java.util.regex.Pattern
 
 class SignupActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignupBinding
-    private val emailValidate = emailValidate()
-    private val passwordValidate = passwordValidate()
-    private val emptyInput = emptyInput()
+    private val emailValidate = EmailValidate()
+    private val passwordValidate = PasswordValidate()
+    private val emptyInput = EmptyInput()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +35,7 @@ class SignupActivity : AppCompatActivity() {
                 binding.emailSignUpText.error = "Invalid email address"
             }
             else if(!passwordValidate.checkPasswordLength(password)) {
-                binding.passwordSignupText.error = "Password must contains at least 8 characters"
+                binding.passwordSignupText.error = "Password must contains at least ${passwordValidate.passwordLength} characters"
             }
             else if(!emptyInput.checkIsEmptyInput(username)) {
                 binding.usernameSignupText.error = "Please enter username"

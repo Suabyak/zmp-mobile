@@ -1,8 +1,9 @@
 package com.example.mobilesocialapp.validations
 
-class passwordValidate {
+class PasswordValidate {
+    val passwordLength = 8
     fun checkPasswordLength(password: String): Boolean {
-        if(password.length < 8) {
+        if(password.length < passwordLength) {
             return false
         }
         return true
