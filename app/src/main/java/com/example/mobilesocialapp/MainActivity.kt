@@ -8,7 +8,7 @@ import android.view.LayoutInflater
 import androidx.lifecycle.lifecycleScope
 import com.example.mobilesocialapp.databinding.ActivityMainBinding
 import com.example.mobilesocialapp.request.AuthRequest
-import com.example.mobilesocialapp.validations.EmptyInput
+import com.example.mobilesocialapp.utils.Login
 import retrofit2.HttpException
 import java.io.IOException
 
@@ -16,7 +16,7 @@ const val TAG = "MainActivity"
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private val emptyInput = EmptyInput()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(LayoutInflater.from(this))
@@ -32,11 +32,8 @@ class MainActivity : AppCompatActivity() {
             val username = binding.usernameLoginText.text.toString()
             val password = binding.passwordLoginText.text.toString()
 
-            if(!emptyInput.checkIsEmptyInput(username)) {
-                binding.usernameLoginText.error = "Please enter username"
-            }
-            else if(!emptyInput.checkIsEmptyInput(password)) {
-                binding.passwordLoginText.error = "Please enter password"
+            if(!Login.validateLoginInput(username, password)) {
+                binding.loginMessage.text = Login.loginError
             } else {
                 binding.loginMessage.text = ""
 

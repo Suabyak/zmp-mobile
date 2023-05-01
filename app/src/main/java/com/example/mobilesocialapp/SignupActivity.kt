@@ -5,16 +5,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import com.example.mobilesocialapp.databinding.ActivitySignupBinding
-import com.example.mobilesocialapp.validations.EmailValidate
-import com.example.mobilesocialapp.validations.EmptyInput
-import com.example.mobilesocialapp.validations.PasswordValidate
-import java.util.regex.Pattern
+import com.example.mobilesocialapp.utils.Registration
 
 class SignupActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignupBinding
-    private val emailValidate = EmailValidate()
-    private val passwordValidate = PasswordValidate()
-    private val emptyInput = EmptyInput()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,31 +25,12 @@ class SignupActivity : AppCompatActivity() {
             val password = binding.passwordSignupText.text.toString()
             val username = binding.usernameSignupText.text.toString()
 
-            if(!emailValidate.checkIsEmailValidate(email)) {
-                binding.emailSignUpText.error = "Invalid email address"
-            }
-            else if(!passwordValidate.checkPasswordLength(password)) {
-                binding.passwordSignupText.error = "Password must contains at least ${passwordValidate.passwordLength} characters"
-            }
-            else if(!emptyInput.checkIsEmptyInput(username)) {
-                binding.usernameSignupText.error = "Please enter username"
-            }
-            else if(!passwordValidate.checkPasswordContainsBigLetter(password)) {
-                binding.passwordSignupText.error = "Password must contains at least one big letter"
-            }
-            else if(!passwordValidate.checkPasswordContainsNumber(password)) {
-                binding.passwordSignupText.error = "Password must contains at least one number"
+            if (!Registration.validateRegistrationInput(email, password, username)) {
+                binding.signupError.text = Registration.registrationError
             } else {
+                binding.signupError.text = Registration.registrationError
                 println("correct")
             }
         }
     }
-
-    private fun isValidateEmail(email: String): Boolean {
-        val pattern = Pattern.compile(
-            "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}\$")
-        val matcher = pattern.matcher(email)
-        return matcher.matches()
-    }
-
 }
