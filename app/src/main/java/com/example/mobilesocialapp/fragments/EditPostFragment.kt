@@ -6,7 +6,6 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
-import android.text.TextUtils
 import android.util.Base64
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -18,6 +17,7 @@ import com.example.mobilesocialapp.utils.DecodeBase64String
 import com.example.mobilesocialapp.RetrofitInstance
 import com.example.mobilesocialapp.databinding.FragmentEditPostBinding
 import com.example.mobilesocialapp.request.EditPostRequest
+import com.example.mobilesocialapp.utils.PostValidation
 import com.example.mobilesocialapp.utils.RedirectToFragment
 import retrofit2.HttpException
 import java.io.ByteArrayOutputStream
@@ -29,7 +29,7 @@ class EditPostFragment(val postId: String, val userId: String, val token: String
     private val decodeBase64String = DecodeBase64String()
     private val redirectToFragment = RedirectToFragment()
     private lateinit var uri: Uri
-    private lateinit var imageString: String
+    private var imageString: String = ""
     private val profileFragment = ProfileFragment(userId, userId, token)
 
     override fun onCreateView(
@@ -69,9 +69,11 @@ class EditPostFragment(val postId: String, val userId: String, val token: String
         binding.editPostButton.setOnClickListener {
             val descriptionInput = binding.descriptionInput.text.toString()
 
-            if(TextUtils.isEmpty(descriptionInput)) {
-                binding.descriptionInput.error = "Please enter description"
+            if (!PostValidation.validatePostInput(descriptionInput, imageString)) {
+                binding.editPostMessage.text = PostValidation.postError
             } else {
+                binding.editPostMessage.text = PostValidation.postError
+
                 lifecycleScope.launchWhenCreated {
                     val response = try {
                         val newEditPostRequest = EditPostRequest(postId, descriptionInput, imageString)

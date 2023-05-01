@@ -6,7 +6,6 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
-import android.text.TextUtils
 import android.util.Base64
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +16,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.mobilesocialapp.RetrofitInstance
 import com.example.mobilesocialapp.databinding.FragmentCreateBinding
 import com.example.mobilesocialapp.request.CreatePostRequest
+import com.example.mobilesocialapp.utils.PostValidation
 import retrofit2.HttpException
 import java.io.ByteArrayOutputStream
 import java.io.IOException
@@ -25,7 +25,7 @@ class CreateFragment : Fragment() {
     private var _binding: FragmentCreateBinding? = null
     private val binding get() = _binding!!
     private lateinit var uri: Uri
-    private lateinit var imageString: String
+    private var imageString: String = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,9 +43,11 @@ class CreateFragment : Fragment() {
         binding.createPostButton.setOnClickListener {
             val descriptionInput = binding.descriptionInput.text.toString()
 
-            if(TextUtils.isEmpty(descriptionInput)) {
-                binding.descriptionInput.setError("Please enter description")
+            if (!PostValidation.validatePostInput(descriptionInput, imageString)) {
+                binding.createPostMessage.text = PostValidation.postError
             } else {
+                binding.createPostMessage.text = PostValidation.postError
+
                 lifecycleScope.launchWhenCreated {
                     val response = try {
                         val newCreatePostRequest = CreatePostRequest(descriptionInput, imageString)
