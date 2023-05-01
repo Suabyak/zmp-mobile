@@ -114,14 +114,14 @@
 
     <TextView
         android:id="@+id/loginMessage"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="40dp"
         android:text=""
-        android:textSize="18sp"
         android:textAlignment="center"
         android:textColor="#FF0000"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/loginButton" />
+        app:layout_constraintTop_toBottomOf="@+id/passwordLogin" />
 </androidx.constraintlayout.widget.ConstraintLayout>
