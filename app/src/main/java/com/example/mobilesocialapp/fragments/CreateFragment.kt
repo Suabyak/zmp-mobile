@@ -17,6 +17,7 @@ import com.example.mobilesocialapp.RetrofitInstance
 import com.example.mobilesocialapp.databinding.FragmentCreateBinding
 import com.example.mobilesocialapp.request.CreatePostRequest
 import com.example.mobilesocialapp.utils.PostValidation
+import com.example.mobilesocialapp.utils.RedirectToFragment
 import retrofit2.HttpException
 import java.io.ByteArrayOutputStream
 import java.io.IOException
@@ -26,6 +27,8 @@ class CreateFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var uri: Uri
     private var imageString: String = ""
+    private lateinit var profileFragment: ProfileFragment
+    private val redirectToFragment = RedirectToFragment()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,6 +38,7 @@ class CreateFragment : Fragment() {
 
         val data = arguments
         val token = data?.get("token").toString()
+        val userId = data?.get("userId").toString()
 
         binding.imageButton.setOnClickListener() {
             uploadImage(binding.imageView)
@@ -65,7 +69,8 @@ class CreateFragment : Fragment() {
 
                     if(response.isSuccessful && response.body() != null) {
                         binding.progressBar.visibility = View.INVISIBLE
-                        binding.createPostMessage.text = "Post created successfully"
+                        profileFragment = ProfileFragment(userId, userId, token)
+                        redirectToFragment.redirect(binding.root, profileFragment)
                     } else {
                         binding.progressBar.visibility = View.INVISIBLE
                         binding.createPostMessage.text = "Post not created! Try again"

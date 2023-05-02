@@ -91,7 +91,7 @@ class EditPostFragment(val postId: String, val userId: String, val token: String
 
                     if(response.isSuccessful && response.body() != null) {
                         binding.progressBar.visibility = View.INVISIBLE
-                        binding.editPostMessage.text = "Post updated successfully"
+                        redirectToFragment.redirect(binding.root, profileFragment)
                     } else {
                         binding.progressBar.visibility = View.INVISIBLE
                         binding.editPostMessage.text = "Post not updated! Try again"

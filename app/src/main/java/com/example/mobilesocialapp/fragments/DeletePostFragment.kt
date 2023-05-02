@@ -50,7 +50,7 @@ class DeletePostFragment(val postId: String, val userId: String, val token: Stri
 
                 if(response.isSuccessful && response.body() != null) {
                     binding.progressBar.visibility = View.INVISIBLE
-                    binding.deletePostMessage.text = response.body()!!.message
+                    redirectToFragment.redirect(binding.root, profileFragment)
                 } else {
                     binding.progressBar.visibility = View.INVISIBLE
                     binding.deletePostMessage.text = "Cant delete this post"
