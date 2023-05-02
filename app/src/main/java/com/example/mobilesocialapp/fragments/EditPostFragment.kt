@@ -73,22 +73,27 @@ class EditPostFragment(val postId: String, val userId: String, val token: String
                 binding.editPostMessage.text = PostValidation.postError
             } else {
                 binding.editPostMessage.text = PostValidation.postError
+                binding.progressBar.visibility = View.VISIBLE
 
                 lifecycleScope.launchWhenCreated {
                     val response = try {
                         val newEditPostRequest = EditPostRequest(postId, descriptionInput, imageString)
                         RetrofitInstance.api.updatePost(newEditPostRequest)
                     } catch(e: IOException) {
+                        binding.progressBar.visibility = View.INVISIBLE
                         binding.editPostMessage.text = "You might not have internet connection"
                         return@launchWhenCreated
                     } catch(e: HttpException) {
+                        binding.progressBar.visibility = View.INVISIBLE
                         binding.editPostMessage.text = "Unexpected response"
                         return@launchWhenCreated
                     }
 
                     if(response.isSuccessful && response.body() != null) {
+                        binding.progressBar.visibility = View.INVISIBLE
                         binding.editPostMessage.text = "Post updated successfully"
                     } else {
+                        binding.progressBar.visibility = View.INVISIBLE
                         binding.editPostMessage.text = "Post not updated! Try again"
                     }
                 }

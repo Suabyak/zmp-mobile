@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import androidx.lifecycle.lifecycleScope
 import com.example.mobilesocialapp.databinding.ActivityMainBinding
 import com.example.mobilesocialapp.request.AuthRequest
@@ -36,20 +37,25 @@ class MainActivity : AppCompatActivity() {
                 binding.loginMessage.text = Login.loginError
             } else {
                 binding.loginMessage.text = ""
+                binding.progressBar.visibility = View.VISIBLE
 
                 lifecycleScope.launchWhenCreated {
                     val response = try {
                         val newAuthRequest = AuthRequest(username, password)
                         RetrofitInstance.api.signIn(newAuthRequest)
                     } catch(e: IOException) {
+                        binding.progressBar.visibility = View.INVISIBLE
                         binding.loginMessage.text = "You might not have internet connection"
                         return@launchWhenCreated
                     } catch(e: HttpException) {
+                        binding.progressBar.visibility = View.INVISIBLE
                         binding.loginMessage.text = "Unexpected response"
                         return@launchWhenCreated
                     }
 
                     if(response.isSuccessful && response.body() != null) {
+                        binding.progressBar.visibility = View.INVISIBLE
+
                         sharedPreferences.edit()
                             .putString("jwt", response.body()!!.message)
                             .apply()
@@ -60,6 +66,7 @@ class MainActivity : AppCompatActivity() {
                         val intent = Intent(this@MainActivity, DashboardActivity::class.java)
                         startActivity(intent)
                     } else {
+                        binding.progressBar.visibility = View.INVISIBLE
                         binding.loginMessage.text = "Incorrect credentials"
                     }
                 }

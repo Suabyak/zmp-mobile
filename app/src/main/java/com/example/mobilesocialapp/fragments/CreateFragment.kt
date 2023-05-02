@@ -47,22 +47,27 @@ class CreateFragment : Fragment() {
                 binding.createPostMessage.text = PostValidation.postError
             } else {
                 binding.createPostMessage.text = PostValidation.postError
+                binding.progressBar.visibility = View.VISIBLE
 
                 lifecycleScope.launchWhenCreated {
                     val response = try {
                         val newCreatePostRequest = CreatePostRequest(descriptionInput, imageString)
                         RetrofitInstance.api.createPost(newCreatePostRequest, "Bearer $token")
                     } catch(e: IOException) {
+                        binding.progressBar.visibility = View.INVISIBLE
                         binding.createPostMessage.text = "You might not have internet connection"
                         return@launchWhenCreated
                     } catch(e: HttpException) {
+                        binding.progressBar.visibility = View.INVISIBLE
                         binding.createPostMessage.text = "Unexpected response"
                         return@launchWhenCreated
                     }
 
                     if(response.isSuccessful && response.body() != null) {
+                        binding.progressBar.visibility = View.INVISIBLE
                         binding.createPostMessage.text = "Post created successfully"
                     } else {
+                        binding.progressBar.visibility = View.INVISIBLE
                         binding.createPostMessage.text = "Post not created! Try again"
                     }
                 }

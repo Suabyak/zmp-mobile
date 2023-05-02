@@ -33,20 +33,26 @@ class DeletePostFragment(val postId: String, val userId: String, val token: Stri
         }
 
         binding.deletePostYes.setOnClickListener {
+            binding.progressBar.visibility = View.VISIBLE
+
             lifecycleScope.launchWhenCreated {
                 val response = try {
                     RetrofitInstance.api.deletePostById(postId)
                 } catch(e: IOException) {
+                    binding.progressBar.visibility = View.INVISIBLE
                     binding.deletePostMessage.text = "You might not have internet connection"
                     return@launchWhenCreated
                 } catch(e: HttpException) {
+                    binding.progressBar.visibility = View.INVISIBLE
                     binding.deletePostMessage.text = "Unexpected response"
                     return@launchWhenCreated
                 }
 
                 if(response.isSuccessful && response.body() != null) {
+                    binding.progressBar.visibility = View.INVISIBLE
                     binding.deletePostMessage.text = response.body()!!.message
                 } else {
+                    binding.progressBar.visibility = View.INVISIBLE
                     binding.deletePostMessage.text = "Cant delete this post"
                 }
             }

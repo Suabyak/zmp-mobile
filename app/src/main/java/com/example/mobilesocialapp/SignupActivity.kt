@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import com.example.mobilesocialapp.databinding.ActivitySignupBinding
 import com.example.mobilesocialapp.utils.Registration
 
@@ -29,7 +30,7 @@ class SignupActivity : AppCompatActivity() {
                 binding.signupError.text = Registration.registrationError
             } else {
                 binding.signupError.text = Registration.registrationError
-                println("correct")
+                binding.progressBar.visibility = View.VISIBLE
             }
         }
     }
