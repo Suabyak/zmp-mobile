@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.fragment.app.Fragment
+import com.example.mobilesocialapp.constants.BundleConsts
 import com.example.mobilesocialapp.databinding.ActivityDashboardBinding
 import com.example.mobilesocialapp.fragments.CreateFragment
 import com.example.mobilesocialapp.fragments.HomeFragment
@@ -25,8 +26,8 @@ class DashboardActivity : AppCompatActivity() {
 
         val bundleData = Bundle()
 
-        bundleData.putString("token", token)
-        bundleData.putString("userId", userId)
+        bundleData.putString(BundleConsts.BundleToken, token)
+        bundleData.putString(BundleConsts.BundleUserId, userId)
 
         val homeFragment = HomeFragment()
         val searchedUsersFragment = SearchedUsersFragment()

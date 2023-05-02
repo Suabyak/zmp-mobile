@@ -9,6 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mobilesocialapp.*
 import com.example.mobilesocialapp.adapters.PostAdapter
+import com.example.mobilesocialapp.constants.BadResponses
 import com.example.mobilesocialapp.databinding.FragmentProfileBinding
 import com.example.mobilesocialapp.utils.DecodeBase64String
 import retrofit2.HttpException
@@ -31,10 +32,10 @@ class ProfileFragment(val currentLoggedUserId: String, val userId: String, val t
             val response = try {
                 RetrofitInstance.api.getUserDataProfile(userId)
             } catch(e: IOException) {
-                binding.userPostsMessage.text = "You might not have internet connection"
+                binding.userPostsMessage.text = BadResponses.notInternetConnection
                 return@launchWhenCreated
             } catch(e: HttpException) {
-                binding.userPostsMessage.text = "Unexpected response"
+                binding.userPostsMessage.text = BadResponses.unexpectedResponse
                 return@launchWhenCreated
             }
 
@@ -52,10 +53,10 @@ class ProfileFragment(val currentLoggedUserId: String, val userId: String, val t
             val response = try {
                 RetrofitInstance.api.getUserPosts(userId)
             } catch(e: IOException) {
-                binding.userPostsMessage.text = "You might not have internet connection"
+                binding.userPostsMessage.text = BadResponses.notInternetConnection
                 return@launchWhenCreated
             } catch(e: HttpException) {
-                binding.userPostsMessage.text = "Unexpected response"
+                binding.userPostsMessage.text = BadResponses.unexpectedResponse
                 return@launchWhenCreated
             }
 

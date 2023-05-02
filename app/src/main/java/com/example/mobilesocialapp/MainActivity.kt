@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import androidx.lifecycle.lifecycleScope
+import com.example.mobilesocialapp.constants.BadResponses
 import com.example.mobilesocialapp.databinding.ActivityMainBinding
 import com.example.mobilesocialapp.request.AuthRequest
 import com.example.mobilesocialapp.utils.Login
@@ -45,11 +46,11 @@ class MainActivity : AppCompatActivity() {
                         RetrofitInstance.api.signIn(newAuthRequest)
                     } catch(e: IOException) {
                         binding.progressBar.visibility = View.INVISIBLE
-                        binding.loginMessage.text = "You might not have internet connection"
+                        binding.loginMessage.text = BadResponses.notInternetConnection
                         return@launchWhenCreated
                     } catch(e: HttpException) {
                         binding.progressBar.visibility = View.INVISIBLE
-                        binding.loginMessage.text = "Unexpected response"
+                        binding.loginMessage.text = BadResponses.unexpectedResponse
                         return@launchWhenCreated
                     }
 

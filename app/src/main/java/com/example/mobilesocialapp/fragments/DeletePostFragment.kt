@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import com.example.mobilesocialapp.RetrofitInstance
+import com.example.mobilesocialapp.constants.BadResponses
 import com.example.mobilesocialapp.databinding.FragmentDeletePostBinding
 import com.example.mobilesocialapp.utils.RedirectToFragment
 import retrofit2.HttpException
@@ -40,11 +41,11 @@ class DeletePostFragment(val postId: String, val userId: String, val token: Stri
                     RetrofitInstance.api.deletePostById(postId)
                 } catch(e: IOException) {
                     binding.progressBar.visibility = View.INVISIBLE
-                    binding.deletePostMessage.text = "You might not have internet connection"
+                    binding.deletePostMessage.text = BadResponses.notInternetConnection
                     return@launchWhenCreated
                 } catch(e: HttpException) {
                     binding.progressBar.visibility = View.INVISIBLE
-                    binding.deletePostMessage.text = "Unexpected response"
+                    binding.deletePostMessage.text = BadResponses.unexpectedResponse
                     return@launchWhenCreated
                 }
 

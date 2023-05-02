@@ -12,6 +12,8 @@ import com.example.mobilesocialapp.R
 import com.example.mobilesocialapp.RetrofitInstance
 import com.example.mobilesocialapp.adapters.PostAdapter
 import com.example.mobilesocialapp.adapters.SearchUsersAdapter
+import com.example.mobilesocialapp.constants.BadResponses
+import com.example.mobilesocialapp.constants.BundleConsts
 import com.example.mobilesocialapp.databinding.FragmentSearchedUsersBinding
 import retrofit2.HttpException
 import java.io.IOException
@@ -28,8 +30,8 @@ class SearchedUsersFragment : Fragment() {
         _binding = FragmentSearchedUsersBinding.inflate(inflater, container, false)
 
         val data = arguments
-        val userId = data?.get("userId").toString()
-        val token = data?.get("token").toString()
+        val userId = data?.get(BundleConsts.BundleUserId).toString()
+        val token = data?.get(BundleConsts.BundleToken).toString()
 
         setupRecyclerView(userId, token)
 
@@ -42,10 +44,10 @@ class SearchedUsersFragment : Fragment() {
                     val response = try {
                         RetrofitInstance.api.getUsersBySearch(searchValue)
                     } catch(e: IOException) {
-                        binding.errorMessage.text = "You might not have internet connection"
+                        binding.errorMessage.text = BadResponses.notInternetConnection
                         return@launchWhenCreated
                     } catch(e: HttpException) {
-                        binding.errorMessage.text = "Unexpected response"
+                        binding.errorMessage.text = BadResponses.unexpectedResponse
                         return@launchWhenCreated
                     }
 

@@ -14,6 +14,8 @@ import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.example.mobilesocialapp.RetrofitInstance
+import com.example.mobilesocialapp.constants.BadResponses
+import com.example.mobilesocialapp.constants.BundleConsts
 import com.example.mobilesocialapp.databinding.FragmentCreateBinding
 import com.example.mobilesocialapp.request.CreatePostRequest
 import com.example.mobilesocialapp.utils.PostValidation
@@ -37,8 +39,8 @@ class CreateFragment : Fragment() {
         _binding = FragmentCreateBinding.inflate(inflater, container, false)
 
         val data = arguments
-        val token = data?.get("token").toString()
-        val userId = data?.get("userId").toString()
+        val token = data?.get(BundleConsts.BundleToken).toString()
+        val userId = data?.get(BundleConsts.BundleUserId).toString()
 
         binding.imageButton.setOnClickListener() {
             uploadImage(binding.imageView)
@@ -59,11 +61,11 @@ class CreateFragment : Fragment() {
                         RetrofitInstance.api.createPost(newCreatePostRequest, "Bearer $token")
                     } catch(e: IOException) {
                         binding.progressBar.visibility = View.INVISIBLE
-                        binding.createPostMessage.text = "You might not have internet connection"
+                        binding.createPostMessage.text = BadResponses.notInternetConnection
                         return@launchWhenCreated
                     } catch(e: HttpException) {
                         binding.progressBar.visibility = View.INVISIBLE
-                        binding.createPostMessage.text = "Unexpected response"
+                        binding.createPostMessage.text = BadResponses.unexpectedResponse
                         return@launchWhenCreated
                     }
 

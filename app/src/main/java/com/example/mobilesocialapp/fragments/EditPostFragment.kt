@@ -15,6 +15,7 @@ import android.widget.ImageView
 import androidx.lifecycle.lifecycleScope
 import com.example.mobilesocialapp.utils.DecodeBase64String
 import com.example.mobilesocialapp.RetrofitInstance
+import com.example.mobilesocialapp.constants.BadResponses
 import com.example.mobilesocialapp.databinding.FragmentEditPostBinding
 import com.example.mobilesocialapp.request.EditPostRequest
 import com.example.mobilesocialapp.utils.PostValidation
@@ -46,10 +47,10 @@ class EditPostFragment(val postId: String, val userId: String, val token: String
             val response = try {
                 RetrofitInstance.api.getPostById(postId)
             } catch(e: IOException) {
-                binding.editPostMessage.text = "You might not have internet connection"
+                binding.editPostMessage.text = BadResponses.notInternetConnection
                 return@launchWhenCreated
             } catch(e: HttpException) {
-                binding.editPostMessage.text = "Unexpected response"
+                binding.editPostMessage.text = BadResponses.unexpectedResponse
                 return@launchWhenCreated
             }
 
@@ -81,11 +82,11 @@ class EditPostFragment(val postId: String, val userId: String, val token: String
                         RetrofitInstance.api.updatePost(newEditPostRequest)
                     } catch(e: IOException) {
                         binding.progressBar.visibility = View.INVISIBLE
-                        binding.editPostMessage.text = "You might not have internet connection"
+                        binding.editPostMessage.text = BadResponses.notInternetConnection
                         return@launchWhenCreated
                     } catch(e: HttpException) {
                         binding.progressBar.visibility = View.INVISIBLE
-                        binding.editPostMessage.text = "Unexpected response"
+                        binding.editPostMessage.text = BadResponses.unexpectedResponse
                         return@launchWhenCreated
                     }
 
