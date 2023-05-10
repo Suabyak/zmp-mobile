@@ -24,9 +24,10 @@ class SignupActivity : AppCompatActivity() {
         binding.signupButton.setOnClickListener {
             val email = binding.emailSignUpText.text.toString()
             val password = binding.passwordSignupText.text.toString()
+            val confirmPassword = binding.confirmPasswordSignupText.text.toString()
             val username = binding.usernameSignupText.text.toString()
 
-            if (!Registration.validateRegistrationInput(email, password, username)) {
+            if (!Registration.validateRegistrationInput(email, password, confirmPassword, username)) {
                 binding.signupError.text = Registration.registrationError
             } else {
                 binding.signupError.text = Registration.registrationError

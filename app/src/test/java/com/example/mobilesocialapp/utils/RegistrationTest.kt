@@ -9,6 +9,7 @@ class RegistrationTest {
         val result = Registration.validateRegistrationInput(
             "mat-biz",
             "Haslo123",
+            "Haslo123",
             "mateuszbizon"
         )
         assertThat(result).isFalse()
@@ -18,6 +19,7 @@ class RegistrationTest {
     fun `invalid password length returns false`() {
         val result = Registration.validateRegistrationInput(
             "mat-biz@wp.pl",
+            "Haslo12",
             "Haslo12",
             "mateuszbizon"
         )
@@ -29,6 +31,7 @@ class RegistrationTest {
         val result = Registration.validateRegistrationInput(
             "mat-biz@wp.pl",
             "Haslo123",
+            "Haslo123",
             ""
         )
         assertThat(result).isFalse()
@@ -38,6 +41,7 @@ class RegistrationTest {
     fun `password has less than 1 digit returns false`() {
         val result = Registration.validateRegistrationInput(
             "mat-biz@wp.pl",
+            "Haslo",
             "Haslo",
             "mateuszbizon"
         )
@@ -49,6 +53,18 @@ class RegistrationTest {
         val result = Registration.validateRegistrationInput(
             "mat-biz@wp.pl",
             "haslo",
+            "haslo",
+            "mateuszbizon"
+        )
+        assertThat(result).isFalse()
+    }
+
+    @Test
+    fun `password are not equal returns false`() {
+        val result = Registration.validateRegistrationInput(
+            "mat-biz@wp.pl",
+            "Haslo123",
+            "Haslo1234",
             "mateuszbizon"
         )
         assertThat(result).isFalse()
@@ -58,6 +74,7 @@ class RegistrationTest {
     fun `valid inputs returns true`() {
         val result = Registration.validateRegistrationInput(
             "mat-biz@wp.pl",
+            "Haslo123",
             "Haslo123",
             "mateuszbizon"
         )

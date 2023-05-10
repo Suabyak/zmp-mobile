@@ -11,6 +11,7 @@ object Registration {
     fun validateRegistrationInput(
         email: String,
         password: String,
+        confirmPassword: String,
         username: String
     ): Boolean {
         if (!emailPattern.matcher(email).matches()) {
@@ -35,6 +36,11 @@ object Registration {
 
         if (!password.contains("[0-9]".toRegex())) {
             registrationError = "Password must contains at least one number"
+            return false
+        }
+
+        if(password != confirmPassword) {
+            registrationError = "Password are not equal"
             return false
         }
         registrationError = ""
