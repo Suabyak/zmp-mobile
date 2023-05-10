@@ -9,7 +9,7 @@ import com.example.mobilesocialapp.MyApplication
 import org.json.JSONObject
 
 class LikePost {
-    private val likePostUrl: String = "http://192.168.1.3:5000/posts/likePostSpecial"
+    private val likePostUrl: String = "http://192.168.100.3:5000/posts/likePostSpecial"
 
     fun likePost(postId: String, token: String){
         val reqQueue: RequestQueue = Volley.newRequestQueue(MyApplication.getInstance())

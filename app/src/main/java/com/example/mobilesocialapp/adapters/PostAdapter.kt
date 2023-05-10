@@ -1,5 +1,6 @@
 package com.example.mobilesocialapp.adapters
 
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.example.mobilesocialapp.constants.BundleConsts
 import com.example.mobilesocialapp.databinding.PostBinding
 import com.example.mobilesocialapp.fragments.CommentsFragment
 import com.example.mobilesocialapp.fragments.DeletePostFragment
@@ -19,11 +21,12 @@ import com.example.mobilesocialapp.utils.RedirectToFragment
 
 class PostAdapter(val currentLoggedUserId: String, val userId: String, val token: String) : RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
     private val decodeBase64String = DecodeBase64String()
-    private lateinit var editPostFragment: EditPostFragment
-    private lateinit var deletePostFragment: DeletePostFragment
-    private lateinit var commentsFragment: CommentsFragment
+    private val editPostFragment = EditPostFragment()
+    private val deletePostFragment = DeletePostFragment()
+    private val commentsFragment = CommentsFragment()
     private val redirectToFragment = RedirectToFragment()
     private val likePost = LikePost()
+    private val bundleData = Bundle()
 
     inner class PostViewHolder(val binding: PostBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -72,9 +75,12 @@ class PostAdapter(val currentLoggedUserId: String, val userId: String, val token
     }
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
+        bundleData.putString(BundleConsts.BundleToken, token)
+        bundleData.putString(BundleConsts.BundleUserId, userId)
+        bundleData.putString(BundleConsts.BundleCurrentLoggedUserId, currentLoggedUserId)
+
         holder.binding.apply {
             val currentPost = posts[position]
-            println(currentPost.likes)
 
             postUsername.text = currentPost.username
             postImg.setImageBitmap(decodeBase64String.decodeBase64(currentPost.selectedFile))
@@ -88,10 +94,8 @@ class PostAdapter(val currentLoggedUserId: String, val userId: String, val token
 
             if(currentPost.likes.contains(currentLoggedUserId)){
                 postLikedImg.visibility = View.VISIBLE
-//                postLikeImg.visibility = View.GONE
             } else {
                 postLikeImg.visibility = View.VISIBLE
-//                postLikedImg.visibility = View.GONE
             }
 
             postLikeImg.setOnClickListener {
@@ -103,17 +107,20 @@ class PostAdapter(val currentLoggedUserId: String, val userId: String, val token
             }
 
             postCommentImg.setOnClickListener { v ->
-                commentsFragment = CommentsFragment(currentPost._id, currentLoggedUserId, userId, token)
+                bundleData.putString(BundleConsts.BundleCurrentPostId, currentPost._id)
+                commentsFragment.arguments = bundleData
                 redirectToFragment.redirect(v, commentsFragment)
             }
 
             editPostBtn.setOnClickListener { v ->
-                editPostFragment = EditPostFragment(currentPost._id, userId, token)
+                bundleData.putString(BundleConsts.BundleCurrentPostId, currentPost._id)
+                editPostFragment.arguments = bundleData
                 redirectToFragment.redirect(v, editPostFragment)
             }
 
             deletePostBtn.setOnClickListener { v ->
-                deletePostFragment = DeletePostFragment(currentPost._id, userId, token)
+                bundleData.putString(BundleConsts.BundleCurrentPostId, currentPost._id)
+                deletePostFragment.arguments = bundleData
                 redirectToFragment.redirect(v, deletePostFragment)
             }
         }

@@ -16,6 +16,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.mobilesocialapp.utils.DecodeBase64String
 import com.example.mobilesocialapp.RetrofitInstance
 import com.example.mobilesocialapp.constants.BadResponses
+import com.example.mobilesocialapp.constants.BundleConsts
 import com.example.mobilesocialapp.databinding.FragmentEditPostBinding
 import com.example.mobilesocialapp.request.EditPostRequest
 import com.example.mobilesocialapp.utils.PostValidation
@@ -24,14 +25,14 @@ import retrofit2.HttpException
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 
-class EditPostFragment(val postId: String, val userId: String, val token: String) : Fragment() {
+class EditPostFragment() : Fragment() {
     private var _binding: FragmentEditPostBinding? = null
     private val binding get() = _binding!!
     private val decodeBase64String = DecodeBase64String()
     private val redirectToFragment = RedirectToFragment()
     private lateinit var uri: Uri
     private var imageString: String = ""
-    private val profileFragment = ProfileFragment(userId, userId, token)
+    private val profileFragment = ProfileFragment()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,13 +40,25 @@ class EditPostFragment(val postId: String, val userId: String, val token: String
     ): View? {
         _binding = FragmentEditPostBinding.inflate(inflater, container, false)
 
+        val data = arguments
+        val token = data?.get(BundleConsts.BundleToken).toString()
+        val userId = data?.get(BundleConsts.BundleUserId).toString()
+        val currentLoggedUserId = data?.get(BundleConsts.BundleCurrentLoggedUserId).toString()
+        val currentPostId = data?.get(BundleConsts.BundleCurrentPostId).toString()
+
+        val bundleData = Bundle()
+        bundleData.putString(BundleConsts.BundleToken, token)
+        bundleData.putString(BundleConsts.BundleUserId, userId)
+        bundleData.putString(BundleConsts.BundleCurrentLoggedUserId, currentLoggedUserId)
+
         binding.comeBackImg.setOnClickListener { v ->
+            profileFragment.arguments = bundleData
             redirectToFragment.redirect(v, profileFragment)
         }
 
         lifecycleScope.launchWhenCreated {
             val response = try {
-                RetrofitInstance.api.getPostById(postId)
+                RetrofitInstance.api.getPostById(currentPostId)
             } catch(e: IOException) {
                 binding.editPostMessage.text = BadResponses.notInternetConnection
                 return@launchWhenCreated
@@ -78,7 +91,7 @@ class EditPostFragment(val postId: String, val userId: String, val token: String
 
                 lifecycleScope.launchWhenCreated {
                     val response = try {
-                        val newEditPostRequest = EditPostRequest(postId, descriptionInput, imageString)
+                        val newEditPostRequest = EditPostRequest(currentPostId, descriptionInput, imageString)
                         RetrofitInstance.api.updatePost(newEditPostRequest)
                     } catch(e: IOException) {
                         binding.progressBar.visibility = View.INVISIBLE
@@ -92,6 +105,7 @@ class EditPostFragment(val postId: String, val userId: String, val token: String
 
                     if(response.isSuccessful && response.body() != null) {
                         binding.progressBar.visibility = View.INVISIBLE
+                        profileFragment.arguments = bundleData
                         redirectToFragment.redirect(binding.root, profileFragment)
                     } else {
                         binding.progressBar.visibility = View.INVISIBLE

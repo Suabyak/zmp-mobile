@@ -30,10 +30,10 @@ class SearchedUsersFragment : Fragment() {
         _binding = FragmentSearchedUsersBinding.inflate(inflater, container, false)
 
         val data = arguments
-        val userId = data?.get(BundleConsts.BundleUserId).toString()
+        val currentLoggedUserId = data?.get(BundleConsts.BundleCurrentLoggedUserId).toString()
         val token = data?.get(BundleConsts.BundleToken).toString()
 
-        setupRecyclerView(userId, token)
+        setupRecyclerView(currentLoggedUserId, token)
 
         binding.searchBtn.setOnClickListener {
             val searchValue = binding.usernameText.text.toString()
@@ -64,8 +64,8 @@ class SearchedUsersFragment : Fragment() {
         return binding.root
     }
 
-    private fun setupRecyclerView(userId: String, token: String) = binding.rvSearchUsers.apply {
-        searchUsersAdapter = SearchUsersAdapter(userId, token)
+    private fun setupRecyclerView(currentLoggedUserId: String, token: String) = binding.rvSearchUsers.apply {
+        searchUsersAdapter = SearchUsersAdapter(currentLoggedUserId, token)
         adapter = searchUsersAdapter
         layoutManager = LinearLayoutManager(this@SearchedUsersFragment.context)
     }

@@ -10,12 +10,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mobilesocialapp.*
 import com.example.mobilesocialapp.adapters.PostAdapter
 import com.example.mobilesocialapp.constants.BadResponses
+import com.example.mobilesocialapp.constants.BundleConsts
 import com.example.mobilesocialapp.databinding.FragmentProfileBinding
 import com.example.mobilesocialapp.utils.DecodeBase64String
 import retrofit2.HttpException
 import java.io.IOException
 
-class ProfileFragment(val currentLoggedUserId: String, val userId: String, val token: String) : Fragment() {
+class ProfileFragment() : Fragment() {
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
     private lateinit var postAdapter: PostAdapter
@@ -25,6 +26,11 @@ class ProfileFragment(val currentLoggedUserId: String, val userId: String, val t
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
+
+        val data = arguments
+        val token = data?.get(BundleConsts.BundleToken).toString()
+        val userId = data?.get(BundleConsts.BundleUserId).toString()
+        val currentLoggedUserId = data?.get(BundleConsts.BundleCurrentLoggedUserId).toString()
 
         setupRecyclerView(currentLoggedUserId, userId, token)
 

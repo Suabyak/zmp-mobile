@@ -23,19 +23,17 @@ class DashboardActivity : AppCompatActivity() {
 
         val token = sharedPreferences.getString("jwt", null)
         val userId = sharedPreferences.getString("userId", null)
+        val currentLoggedUserId = sharedPreferences.getString("userId", null)
 
         val bundleData = Bundle()
-
         bundleData.putString(BundleConsts.BundleToken, token)
         bundleData.putString(BundleConsts.BundleUserId, userId)
+        bundleData.putString(BundleConsts.BundleCurrentLoggedUserId, currentLoggedUserId)
 
         val homeFragment = HomeFragment()
         val searchedUsersFragment = SearchedUsersFragment()
         val createFragment = CreateFragment()
-
-        if(userId != null && token != null) {
-            profileFragment = ProfileFragment(userId, userId, token)
-        }
+        val profileFragment = ProfileFragment()
 
         homeFragment.arguments = bundleData
         setFragment(homeFragment)
@@ -58,7 +56,7 @@ class DashboardActivity : AppCompatActivity() {
                 }
 
                 R.id.profile -> {
-//                    profileFragment.arguments = bundleData
+                    profileFragment.arguments = bundleData
                     setFragment(profileFragment)
                 }
             }

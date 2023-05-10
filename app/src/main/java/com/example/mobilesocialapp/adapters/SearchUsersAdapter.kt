@@ -1,20 +1,23 @@
 package com.example.mobilesocialapp.adapters
 
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.example.mobilesocialapp.constants.BundleConsts
 import com.example.mobilesocialapp.databinding.SearchedUserBinding
 import com.example.mobilesocialapp.fragments.ProfileFragment
 import com.example.mobilesocialapp.response.UsersBySearchResponse
 import com.example.mobilesocialapp.utils.DecodeBase64String
 import com.example.mobilesocialapp.utils.RedirectToFragment
 
-class SearchUsersAdapter(val userId: String, val token: String) : RecyclerView.Adapter<SearchUsersAdapter.SearchedUserViewHolder>() {
+class SearchUsersAdapter(val currentLoggedUserId: String, val token: String) : RecyclerView.Adapter<SearchUsersAdapter.SearchedUserViewHolder>() {
     private val decodeBase64String = DecodeBase64String()
-    private lateinit var profileFragment: ProfileFragment
+    private val profileFragment = ProfileFragment()
     private val redirectToFragment = RedirectToFragment()
+    private val bundleData = Bundle()
 
     inner class SearchedUserViewHolder(val binding: SearchedUserBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -48,6 +51,9 @@ class SearchUsersAdapter(val userId: String, val token: String) : RecyclerView.A
     }
 
     override fun onBindViewHolder(holder: SearchUsersAdapter.SearchedUserViewHolder, position: Int) {
+        bundleData.putString(BundleConsts.BundleToken, token)
+        bundleData.putString(BundleConsts.BundleCurrentLoggedUserId, currentLoggedUserId)
+
         holder.binding.apply {
             val currentUser = users[position]
 
@@ -58,12 +64,14 @@ class SearchUsersAdapter(val userId: String, val token: String) : RecyclerView.A
             }
 
             username.setOnClickListener { v ->
-                profileFragment = ProfileFragment(userId, currentUser._id, token)
+                bundleData.putString(BundleConsts.BundleUserId, currentUser._id)
+                profileFragment.arguments = bundleData
                 redirectToFragment.redirect(v, profileFragment)
             }
 
             userProfileImg.setOnClickListener { v ->
-                profileFragment = ProfileFragment(userId, currentUser._id, token)
+                bundleData.putString(BundleConsts.BundleUserId, currentUser._id)
+                profileFragment.arguments = bundleData
                 redirectToFragment.redirect(v, profileFragment)
             }
         }

@@ -8,16 +8,17 @@ import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import com.example.mobilesocialapp.RetrofitInstance
 import com.example.mobilesocialapp.constants.BadResponses
+import com.example.mobilesocialapp.constants.BundleConsts
 import com.example.mobilesocialapp.databinding.FragmentDeletePostBinding
 import com.example.mobilesocialapp.utils.RedirectToFragment
 import retrofit2.HttpException
 import java.io.IOException
 
-class DeletePostFragment(val postId: String, val userId: String, val token: String) : Fragment() {
+class DeletePostFragment() : Fragment() {
     private var _binding: FragmentDeletePostBinding? = null
     private val binding get() = _binding!!
     private val redirectToFragment = RedirectToFragment()
-    private val profileFragment = ProfileFragment(userId, userId, token)
+    private val profileFragment = ProfileFragment()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -25,11 +26,24 @@ class DeletePostFragment(val postId: String, val userId: String, val token: Stri
     ): View? {
         _binding = FragmentDeletePostBinding.inflate(inflater, container, false)
 
+        val data = arguments
+        val token = data?.get(BundleConsts.BundleToken).toString()
+        val userId = data?.get(BundleConsts.BundleUserId).toString()
+        val currentLoggedUserId = data?.get(BundleConsts.BundleCurrentLoggedUserId).toString()
+        val currentPostId = data?.get(BundleConsts.BundleCurrentPostId).toString()
+
+        val bundleData = Bundle()
+        bundleData.putString(BundleConsts.BundleToken, token)
+        bundleData.putString(BundleConsts.BundleUserId, userId)
+        bundleData.putString(BundleConsts.BundleCurrentLoggedUserId, currentLoggedUserId)
+
         binding.comeBackImg.setOnClickListener { v ->
+            profileFragment.arguments = bundleData
             redirectToFragment.redirect(v, profileFragment)
         }
 
         binding.deletePostNo.setOnClickListener { v ->
+            profileFragment.arguments = bundleData
             redirectToFragment.redirect(v, profileFragment)
         }
 
@@ -38,7 +52,7 @@ class DeletePostFragment(val postId: String, val userId: String, val token: Stri
 
             lifecycleScope.launchWhenCreated {
                 val response = try {
-                    RetrofitInstance.api.deletePostById(postId)
+                    RetrofitInstance.api.deletePostById(currentPostId)
                 } catch(e: IOException) {
                     binding.progressBar.visibility = View.INVISIBLE
                     binding.deletePostMessage.text = BadResponses.notInternetConnection
@@ -51,6 +65,7 @@ class DeletePostFragment(val postId: String, val userId: String, val token: Stri
 
                 if(response.isSuccessful && response.body() != null) {
                     binding.progressBar.visibility = View.INVISIBLE
+                    profileFragment.arguments = bundleData
                     redirectToFragment.redirect(binding.root, profileFragment)
                 } else {
                     binding.progressBar.visibility = View.INVISIBLE

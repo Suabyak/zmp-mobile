@@ -29,7 +29,7 @@ class CreateFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var uri: Uri
     private var imageString: String = ""
-    private lateinit var profileFragment: ProfileFragment
+    private val profileFragment = ProfileFragment()
     private val redirectToFragment = RedirectToFragment()
 
     override fun onCreateView(
@@ -41,6 +41,12 @@ class CreateFragment : Fragment() {
         val data = arguments
         val token = data?.get(BundleConsts.BundleToken).toString()
         val userId = data?.get(BundleConsts.BundleUserId).toString()
+        val currentLoggedUserId = data?.get(BundleConsts.BundleCurrentLoggedUserId).toString()
+
+        val bundleData = Bundle()
+        bundleData.putString(BundleConsts.BundleToken, token)
+        bundleData.putString(BundleConsts.BundleUserId, userId)
+        bundleData.putString(BundleConsts.BundleCurrentLoggedUserId, currentLoggedUserId)
 
         binding.imageButton.setOnClickListener() {
             uploadImage(binding.imageView)
@@ -71,7 +77,7 @@ class CreateFragment : Fragment() {
 
                     if(response.isSuccessful && response.body() != null) {
                         binding.progressBar.visibility = View.INVISIBLE
-                        profileFragment = ProfileFragment(userId, userId, token)
+                        profileFragment.arguments = bundleData
                         redirectToFragment.redirect(binding.root, profileFragment)
                     } else {
                         binding.progressBar.visibility = View.INVISIBLE
