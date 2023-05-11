@@ -68,6 +68,10 @@ class ProfileFragment() : Fragment() {
 
             if(response.isSuccessful && response.body() != null) {
                 postAdapter.posts = response.body()!!
+
+                if (postAdapter.itemCount == 0) {
+                    binding.userPostsMessage.text = "No posts yet"
+                }
             } else {
                 binding.userPostsMessage.text = "Cant retrieve posts"
             }

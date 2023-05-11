@@ -37,6 +37,7 @@ class SearchedUsersFragment : Fragment() {
 
         binding.searchBtn.setOnClickListener {
             val searchValue = binding.usernameText.text.toString()
+
             if(TextUtils.isEmpty(searchValue)){
                 binding.username.error = "Please enter username"
             } else {
@@ -44,18 +45,22 @@ class SearchedUsersFragment : Fragment() {
                     val response = try {
                         RetrofitInstance.api.getUsersBySearch(searchValue)
                     } catch(e: IOException) {
-                        binding.errorMessage.text = BadResponses.notInternetConnection
+                        binding.searchedUsersMessage.text = BadResponses.notInternetConnection
                         return@launchWhenCreated
                     } catch(e: HttpException) {
-                        binding.errorMessage.text = BadResponses.unexpectedResponse
+                        binding.searchedUsersMessage.text = BadResponses.unexpectedResponse
                         return@launchWhenCreated
                     }
 
                     if(response.isSuccessful && response.body() != null) {
                         searchUsersAdapter.users = response.body()!!
-                        binding.errorMessage.text = ""
+                        binding.searchedUsersMessage.text = ""
+
+                        if (searchUsersAdapter.itemCount == 0) {
+                            binding.searchedUsersMessage.text = "No users found"
+                        }
                     } else {
-                        binding.errorMessage.text = "Cant retrieve users"
+                        binding.searchedUsersMessage.text = "Cant retrieve users"
                     }
                 }
             }
