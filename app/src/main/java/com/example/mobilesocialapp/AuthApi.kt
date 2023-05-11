@@ -1,9 +1,6 @@
 package com.example.mobilesocialapp
 
-import com.example.mobilesocialapp.request.AddCommentRequest
-import com.example.mobilesocialapp.request.AuthRequest
-import com.example.mobilesocialapp.request.CreatePostRequest
-import com.example.mobilesocialapp.request.EditPostRequest
+import com.example.mobilesocialapp.request.*
 import com.example.mobilesocialapp.response.*
 import retrofit2.Response
 import retrofit2.http.Body
@@ -39,6 +36,9 @@ interface AuthApi {
 
     @DELETE("/posts/deletePostSpecial")
     suspend fun deletePostById(@Query("id") key: String): Response<DeletePostResponse>
+
+    @POST("/posts/likePostSpecial")
+    suspend fun likePost(@Body likePostRequest: LikePostRequest, @Header("Authorization") token: String)
 
     @GET("/posts/getCommentsByIdSpecial")
     suspend fun getComments(@Query("id") key: String): Response<List<CommentsResponse>>

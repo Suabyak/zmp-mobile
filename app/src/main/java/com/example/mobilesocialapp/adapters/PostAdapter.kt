@@ -9,15 +9,20 @@ import android.widget.TextView
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.example.mobilesocialapp.RetrofitInstance
 import com.example.mobilesocialapp.constants.BundleConsts
 import com.example.mobilesocialapp.databinding.PostBinding
 import com.example.mobilesocialapp.fragments.CommentsFragment
 import com.example.mobilesocialapp.fragments.DeletePostFragment
 import com.example.mobilesocialapp.fragments.EditPostFragment
+import com.example.mobilesocialapp.request.LikePostRequest
 import com.example.mobilesocialapp.response.PostsResponse
 import com.example.mobilesocialapp.utils.DecodeBase64String
-import com.example.mobilesocialapp.utils.LikePost
 import com.example.mobilesocialapp.utils.RedirectToFragment
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import retrofit2.HttpException
+import java.io.IOException
 
 class PostAdapter(val currentLoggedUserId: String, val userId: String, val token: String) : RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
     private val decodeBase64String = DecodeBase64String()
@@ -25,7 +30,6 @@ class PostAdapter(val currentLoggedUserId: String, val userId: String, val token
     private val deletePostFragment = DeletePostFragment()
     private val commentsFragment = CommentsFragment()
     private val redirectToFragment = RedirectToFragment()
-    private val likePost = LikePost()
     private val bundleData = Bundle()
 
     inner class PostViewHolder(val binding: PostBinding) : RecyclerView.ViewHolder(binding.root)
@@ -58,7 +62,7 @@ class PostAdapter(val currentLoggedUserId: String, val userId: String, val token
         ))
     }
 
-    fun checkIsLiked(notLikedImg: ImageView, likedImg: ImageView, likes: ArrayList<String>, likesNumber: TextView, postId: String) {
+    private fun checkIsLiked(notLikedImg: ImageView, likedImg: ImageView, likes: ArrayList<String>, likesNumber: TextView, postId: String) {
         if(likes.contains(currentLoggedUserId)){
             notLikedImg.visibility = View.VISIBLE
             likedImg.visibility = View.GONE
@@ -71,7 +75,19 @@ class PostAdapter(val currentLoggedUserId: String, val userId: String, val token
 
         likesNumber.text = likes.size.toString()
 
-        likePost.likePost(postId, token)
+        likePost(postId, token)
+    }
+
+    private fun likePost(currentPostId: String, token: String) {
+        GlobalScope.launch {
+            try {
+                RetrofitInstance.api.likePost(LikePostRequest(currentPostId), "Bearer $token")
+            } catch(e: IOException) {
+                return@launch
+            } catch(e: HttpException) {
+                return@launch
+            }
+        }
     }
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
