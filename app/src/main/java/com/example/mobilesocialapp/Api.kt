@@ -11,7 +11,7 @@ import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Query
 
-interface AuthApi {
+interface Api {
     @POST("/user/signinspecial")
     suspend fun signIn(@Body authRequest: AuthRequest): Response<AuthResponse>
 
