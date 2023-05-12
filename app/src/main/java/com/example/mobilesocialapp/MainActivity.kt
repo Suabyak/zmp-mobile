@@ -25,6 +25,12 @@ class MainActivity : AppCompatActivity() {
         val sharedPreferences: SharedPreferences = this.getSharedPreferences("prefs", MODE_PRIVATE)
         setContentView(binding.root)
 
+        val token = sharedPreferences.getString("jwt", null)
+
+        if (token != null) {
+            redirectToHome()
+        }
+
         binding.singupTextLogin.setOnClickListener {
             val intent = Intent(this, SignupActivity::class.java)
             startActivity(intent)
@@ -64,8 +70,7 @@ class MainActivity : AppCompatActivity() {
                             .putString("userId", response.body()!!.userId)
                             .apply()
 
-                        val intent = Intent(this@MainActivity, DashboardActivity::class.java)
-                        startActivity(intent)
+                        redirectToHome()
                     } else {
                         binding.progressBar.visibility = View.INVISIBLE
                         binding.loginMessage.text = "Incorrect credentials"
@@ -73,5 +78,10 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun redirectToHome() {
+        val intent = Intent(this@MainActivity, DashboardActivity::class.java)
+        startActivity(intent)
     }
 }
