@@ -79,10 +79,6 @@ class CommentsFragment() : Fragment() {
 
             if(response.isSuccessful && response.body() != null) {
                 commentAdapter.comments = response.body()!!
-
-                if (commentAdapter.itemCount == 0) {
-                    binding.commentsMessage.text = "No comments yet"
-                }
             } else {
                 println("Cant retrieve comments")
             }

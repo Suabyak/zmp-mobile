@@ -58,6 +58,8 @@ class SearchedUsersFragment : Fragment() {
 
                         if (searchUsersAdapter.itemCount == 0) {
                             binding.searchedUsersMessage.text = "No users found"
+                        } else {
+                            binding.searchedUsersMessage.text = ""
                         }
                     } else {
                         binding.searchedUsersMessage.text = "Cant retrieve users"
