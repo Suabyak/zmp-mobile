@@ -13,100 +13,96 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.lifecycle.lifecycleScope
-import com.example.mobilesocialapp.utils.DecodeBase64String
+import com.example.mobilesocialapp.R
 import com.example.mobilesocialapp.RetrofitInstance
 import com.example.mobilesocialapp.constants.BadResponses
 import com.example.mobilesocialapp.constants.BundleConsts
-import com.example.mobilesocialapp.databinding.FragmentEditPostBinding
-import com.example.mobilesocialapp.request.EditPostRequest
-import com.example.mobilesocialapp.utils.PostValidation
+import com.example.mobilesocialapp.databinding.FragmentChangeProfileBinding
+import com.example.mobilesocialapp.request.ChangeProfileRequest
+import com.example.mobilesocialapp.utils.DecodeBase64String
 import com.example.mobilesocialapp.utils.RedirectToFragment
 import retrofit2.HttpException
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 
-class EditPostFragment() : Fragment() {
-    private var _binding: FragmentEditPostBinding? = null
+class ChangeProfileFragment : Fragment() {
+    private var _binding: FragmentChangeProfileBinding? = null
     private val binding get() = _binding!!
-    private val decodeBase64String = DecodeBase64String()
-    private val redirectToFragment = RedirectToFragment()
-    private lateinit var uri: Uri
     private var imageString: String = ""
+    private lateinit var uri: Uri
+    private val decodeBase64String = DecodeBase64String()
     private val profileFragment = ProfileFragment()
+    private val redirectToFragment = RedirectToFragment()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentEditPostBinding.inflate(inflater, container, false)
+        _binding = FragmentChangeProfileBinding.inflate(inflater, container, false)
 
         val data = arguments
         val token = data?.get(BundleConsts.BundleToken).toString()
         val userId = data?.get(BundleConsts.BundleUserId).toString()
         val currentLoggedUserId = data?.get(BundleConsts.BundleCurrentLoggedUserId).toString()
-        val currentPostId = data?.get(BundleConsts.BundleCurrentPostId).toString()
 
         val bundleData = Bundle()
         bundleData.putString(BundleConsts.BundleToken, token)
         bundleData.putString(BundleConsts.BundleUserId, userId)
         bundleData.putString(BundleConsts.BundleCurrentLoggedUserId, currentLoggedUserId)
 
-        binding.comeBackImg.setOnClickListener { v ->
-            profileFragment.arguments = bundleData
-            redirectToFragment.redirect(v, profileFragment)
+        binding.setImg.setOnClickListener {
+            uploadImage(binding.userProfileImg)
         }
 
         lifecycleScope.launchWhenCreated {
             val response = try {
-                RetrofitInstance.api.getPostById(currentPostId)
+                RetrofitInstance.api.getUserDataProfile(userId)
             } catch(e: IOException) {
-                binding.editPostMessage.text = BadResponses.notInternetConnection
+                binding.errorMessage.text = BadResponses.notInternetConnection
                 return@launchWhenCreated
             } catch(e: HttpException) {
-                binding.editPostMessage.text = BadResponses.unexpectedResponse
+                binding.errorMessage.text = BadResponses.unexpectedResponse
                 return@launchWhenCreated
             }
 
             if(response.isSuccessful && response.body() != null) {
-                binding.descriptionInput.setText(response.body()!!.body)
-                binding.imageView.setImageBitmap(decodeBase64String.decodeBase64(response.body()!!.file))
-                imageString = response.body()!!.file
+                if(response.body()!!.file.isNotEmpty()) {
+                    binding.userProfileImg.setImageBitmap(decodeBase64String.decodeBase64(response.body()!!.file))
+                    imageString = response.body()!!.file
+                }
             } else {
-                binding.editPostMessage.text = "Cant retrieve this post"
+                binding.errorMessage.text = "Cant retrieve user image"
             }
         }
 
-        binding.imageButton.setOnClickListener() {
-            uploadImage(binding.imageView)
-        }
-
-        binding.editPostButton.setOnClickListener {
-            val descriptionInput = binding.descriptionInput.text.toString()
-
-            if (!PostValidation.validatePostInput(descriptionInput, imageString)) {
-                binding.editPostMessage.text = PostValidation.postError
+        binding.changeProfile.setOnClickListener {
+            if (imageString.isEmpty()) {
+                binding.errorMessage.text = "Select profile image"
             } else {
-                binding.editPostMessage.text = PostValidation.postError
+                binding.errorMessage.text = ""
                 binding.progressBar.visibility = View.VISIBLE
 
                 lifecycleScope.launchWhenCreated {
-                    try {
-                        val newEditPostRequest = EditPostRequest(descriptionInput, imageString)
-                        RetrofitInstance.api.updatePost(newEditPostRequest, "Bearer $token", currentPostId)
+                    val response = try {
+                        val newChangeProfileRequest = ChangeProfileRequest(imageString)
+                        RetrofitInstance.api.changeProfile(newChangeProfileRequest, "Bearer $token")
                     } catch(e: IOException) {
-                        println("e: $e")
                         binding.progressBar.visibility = View.INVISIBLE
-                        binding.editPostMessage.text = BadResponses.notInternetConnection
+                        binding.errorMessage.text = BadResponses.notInternetConnection
                         return@launchWhenCreated
                     } catch(e: HttpException) {
                         binding.progressBar.visibility = View.INVISIBLE
-                        binding.editPostMessage.text = BadResponses.unexpectedResponse
+                        binding.errorMessage.text = BadResponses.unexpectedResponse
                         return@launchWhenCreated
                     }
 
-                    binding.progressBar.visibility = View.INVISIBLE
-                    profileFragment.arguments = bundleData
-                    redirectToFragment.redirect(binding.root, profileFragment)
+                    if (response.isSuccessful && response.body() != null) {
+                        binding.progressBar.visibility = View.INVISIBLE
+                        profileFragment.arguments = bundleData
+                        redirectToFragment.redirect(binding.root, profileFragment)
+                    } else {
+                        binding.errorMessage.text = response.body()!!.message
+                    }
                 }
             }
         }
@@ -125,7 +121,7 @@ class EditPostFragment() : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
-            binding.imageView.setImageURI(data?.data)
+            binding.userProfileImg.setImageURI(data?.data)
 
             uri = data?.data!!
             val input = activity?.contentResolver?.openInputStream(uri)

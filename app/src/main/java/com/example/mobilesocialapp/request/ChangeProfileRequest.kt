@@ -1,6 +1,5 @@
 package com.example.mobilesocialapp.request
 
-data class EditPostRequest(
-    val body: String,
+data class ChangeProfileRequest(
     val file: String
 )

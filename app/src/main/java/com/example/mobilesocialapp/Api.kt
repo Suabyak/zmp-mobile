@@ -9,42 +9,57 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.PATCH
 import retrofit2.http.POST
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface Api {
-    @POST("/user/signinspecial")
+    @POST("/api/users/sign-in/")
     suspend fun signIn(@Body authRequest: AuthRequest): Response<AuthResponse>
 
-    @GET("/user/getUsersBySearchSpecial")
-    suspend fun getUsersBySearch(@Query("search") key: String): Response<List<UsersBySearchResponse>>
+    @POST("/api/users/sign-up/")
+    suspend fun signUp(@Body signUpRequest: SignUpRequest): Response<SignUpResponse>
 
-    @POST("/posts/createPost")
+    @GET("/api/users/get-user-data/")
+    suspend fun getUserDataProfile(@Query("id") key: String): Response<UserDataProfileResponse>
+
+    @POST("/api/posts/create/")
     suspend fun createPost(@Body createPostRequest: CreatePostRequest,
                            @Header("Authorization") token: String): Response<CreatePostResponse>
 
-    @GET("/posts/getUserPostsSpecial")
-    suspend fun getUserPosts(@Query("id") key: String): Response<List<PostsResponse>>
+    @GET("/api/posts/user-get/{id}/")
+    suspend fun getUserPosts(@Path("id") key: String): Response<List<PostsResponse>>
 
-    @GET("/user/getUserDataProfileSpecial")
-    suspend fun getUserDataProfile(@Query("id") key: String): Response<UserDataProfileResponse>
+    @GET("/api/posts/get/{id}/")
+    suspend fun getPostById(@Path("id") key: String): Response<PostResponse>
 
-    @GET("/posts/getPostByIdSpecial")
-    suspend fun getPostById(@Query("id") key: String): Response<PostResponse>
+    @PATCH("/api/posts/update/{id}/")
+    suspend fun updatePost(@Body editPostRequest: EditPostRequest, @Header("Authorization") token: String, @Path("id") key: String)
 
-    @PATCH("/posts/updatePostSpecial")
-    suspend fun updatePost(@Body editPostRequest: EditPostRequest): Response<EditPostResponse>
+    @DELETE("/api/post/{id}/")
+    suspend fun deletePostById(@Path("id") key: String, @Header("Authorization") token: String)
 
-    @DELETE("/posts/deletePostSpecial")
-    suspend fun deletePostById(@Query("id") key: String): Response<DeletePostResponse>
+    @POST("/api/post/like/{id}/")
+    suspend fun likePost(@Path("id") key: Int, @Header("Authorization") token: String)
 
-    @POST("/posts/likePostSpecial")
-    suspend fun likePost(@Body likePostRequest: LikePostRequest, @Header("Authorization") token: String)
+    @GET("/api/post/{id}/comments/")
+    suspend fun getComments(@Path("id") key: String): Response<List<CommentsResponse>>
 
-    @GET("/posts/getCommentsByIdSpecial")
-    suspend fun getComments(@Query("id") key: String): Response<List<CommentsResponse>>
+    @POST("/api/post/{id}/comment/")
+    suspend fun addComment(@Path("id") key: String, @Header("Authorization") token: String, @Body addCommentRequest: AddCommentRequest)
 
-    @POST("/posts/addComment")
-    suspend fun addComment(@Query("id") key: String, @Header("Authorization") token: String, @Body addCommentRequest: AddCommentRequest): Response<AddCommentResponse>
+    @GET("/api/users/get-users-by-search/")
+    suspend fun getUsersBySearch(@Query("search") key: String): Response<List<UsersBySearchResponse>>
 
+    @POST("/api/user/profile/set/")
+    suspend fun changeProfile(@Body changeProfileRequest: ChangeProfileRequest, @Header("Authorization") token: String): Response<ChangeProfileResponse>
+
+    @GET("/api/posts/get-feed")
+    suspend fun getFeed(@Header("Authorization") token: String): Response<List<PostsResponse>>
+
+    @GET("/api/user/observed/")
+    suspend fun getObserved(@Header("Authorization") token: String): Response<List<GetObservedResponse>>
+
+    @POST("/api/user/observe/")
+    suspend fun observe(@Body observeRequest: ObserveRequest, @Header("Authorization") token: String)
 
 }

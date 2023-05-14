@@ -24,7 +24,7 @@ import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
 
-class PostAdapter(val currentLoggedUserId: String, val userId: String, val token: String) : RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
+class PostAdapter(val currentLoggedUserId: Int, val userId: String, val token: String) : RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
     private val decodeBase64String = DecodeBase64String()
     private val editPostFragment = EditPostFragment()
     private val deletePostFragment = DeletePostFragment()
@@ -36,7 +36,7 @@ class PostAdapter(val currentLoggedUserId: String, val userId: String, val token
 
     private val diffCallback = object: DiffUtil.ItemCallback<PostsResponse>() {
         override fun areItemsTheSame(oldItem: PostsResponse, newItem: PostsResponse): Boolean {
-            return oldItem._id == newItem._id
+            return oldItem.id == newItem.id
         }
 
         override fun areContentsTheSame(oldItem: PostsResponse, newItem: PostsResponse): Boolean {
@@ -62,12 +62,15 @@ class PostAdapter(val currentLoggedUserId: String, val userId: String, val token
         ))
     }
 
-    private fun checkIsLiked(notLikedImg: ImageView, likedImg: ImageView, likes: ArrayList<String>, likesNumber: TextView, postId: String) {
+    private fun checkIsLiked(notLikedImg: ImageView, likedImg: ImageView, likes: ArrayList<Int>, likesNumber: TextView, postId: Int) {
+        println(likes)
         if(likes.contains(currentLoggedUserId)){
+            println(likes)
             notLikedImg.visibility = View.VISIBLE
             likedImg.visibility = View.GONE
             likes.remove(currentLoggedUserId)
         } else {
+            println(likes)
             notLikedImg.visibility = View.GONE
             likedImg.visibility = View.VISIBLE
             likes.add(currentLoggedUserId)
@@ -78,10 +81,10 @@ class PostAdapter(val currentLoggedUserId: String, val userId: String, val token
         likePost(postId, token)
     }
 
-    private fun likePost(currentPostId: String, token: String) {
+    private fun likePost(currentPostId: Int, token: String) {
         GlobalScope.launch {
             try {
-                RetrofitInstance.api.likePost(LikePostRequest(currentPostId), "Bearer $token")
+                RetrofitInstance.api.likePost(currentPostId, "Bearer $token")
             } catch(e: IOException) {
                 return@launch
             } catch(e: HttpException) {
@@ -93,17 +96,17 @@ class PostAdapter(val currentLoggedUserId: String, val userId: String, val token
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
         bundleData.putString(BundleConsts.BundleToken, token)
         bundleData.putString(BundleConsts.BundleUserId, userId)
-        bundleData.putString(BundleConsts.BundleCurrentLoggedUserId, currentLoggedUserId)
+        bundleData.putString(BundleConsts.BundleCurrentLoggedUserId, currentLoggedUserId.toString())
 
         holder.binding.apply {
             val currentPost = posts[position]
 
-            postUsername.text = currentPost.username
-            postImg.setImageBitmap(decodeBase64String.decodeBase64(currentPost.selectedFile))
+            postUsername.text = currentPost.user.username
+            postImg.setImageBitmap(decodeBase64String.decodeBase64(currentPost.file))
             postLikesNumber.text = currentPost.likes.size.toString()
-            postMainText.text = currentPost.message
+            postMainText.text = currentPost.body
 
-            if(currentLoggedUserId == currentPost.creator) {
+            if(currentLoggedUserId == currentPost.user.id) {
                 editPostBtn.visibility = View.VISIBLE
                 deletePostBtn.visibility = View.VISIBLE
             }
@@ -115,27 +118,27 @@ class PostAdapter(val currentLoggedUserId: String, val userId: String, val token
             }
 
             postLikeImg.setOnClickListener {
-                checkIsLiked(postLikeImg, postLikedImg, currentPost.likes, postLikesNumber, currentPost._id)
+                checkIsLiked(postLikeImg, postLikedImg, currentPost.likes, postLikesNumber, currentPost.id)
             }
 
             postLikedImg.setOnClickListener {
-                checkIsLiked(postLikeImg, postLikedImg, currentPost.likes, postLikesNumber, currentPost._id)
+                checkIsLiked(postLikeImg, postLikedImg, currentPost.likes, postLikesNumber, currentPost.id)
             }
 
             postCommentImg.setOnClickListener { v ->
-                bundleData.putString(BundleConsts.BundleCurrentPostId, currentPost._id)
+                bundleData.putString(BundleConsts.BundleCurrentPostId, currentPost.id.toString())
                 commentsFragment.arguments = bundleData
                 redirectToFragment.redirect(v, commentsFragment)
             }
 
             editPostBtn.setOnClickListener { v ->
-                bundleData.putString(BundleConsts.BundleCurrentPostId, currentPost._id)
+                bundleData.putString(BundleConsts.BundleCurrentPostId, currentPost.id.toString())
                 editPostFragment.arguments = bundleData
                 redirectToFragment.redirect(v, editPostFragment)
             }
 
             deletePostBtn.setOnClickListener { v ->
-                bundleData.putString(BundleConsts.BundleCurrentPostId, currentPost._id)
+                bundleData.putString(BundleConsts.BundleCurrentPostId, currentPost.id.toString())
                 deletePostFragment.arguments = bundleData
                 redirectToFragment.redirect(v, deletePostFragment)
             }

@@ -1,8 +1,6 @@
 package com.example.mobilesocialapp.response
 
-data class AuthResponse(
+data class ChangeProfileResponse(
     val success: Boolean,
     val message: String,
-    val id: Int,
-    val token: String
 )

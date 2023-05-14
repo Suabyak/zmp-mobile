@@ -5,8 +5,14 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import androidx.lifecycle.lifecycleScope
+import com.example.mobilesocialapp.constants.BadResponses
 import com.example.mobilesocialapp.databinding.ActivitySignupBinding
+import com.example.mobilesocialapp.request.AuthRequest
+import com.example.mobilesocialapp.request.SignUpRequest
 import com.example.mobilesocialapp.utils.Registration
+import retrofit2.HttpException
+import java.io.IOException
 
 class SignupActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignupBinding
@@ -32,6 +38,31 @@ class SignupActivity : AppCompatActivity() {
             } else {
                 binding.signupError.text = Registration.registrationError
                 binding.progressBar.visibility = View.VISIBLE
+
+                lifecycleScope.launchWhenCreated {
+                    val response = try {
+                        val newSignUpRequest = SignUpRequest(username, email, password, confirmPassword)
+                        RetrofitInstance.api.signUp(newSignUpRequest)
+                    } catch(e: IOException) {
+                        binding.progressBar.visibility = View.INVISIBLE
+                        binding.signupError.text = BadResponses.notInternetConnection
+                        return@launchWhenCreated
+                    } catch(e: HttpException) {
+                        binding.progressBar.visibility = View.INVISIBLE
+                        binding.signupError.text = BadResponses.unexpectedResponse
+                        return@launchWhenCreated
+                    }
+
+                    if(response.isSuccessful && response.body() != null) {
+                        binding.progressBar.visibility = View.INVISIBLE
+                        binding.signupError.text = response.body()!!.message
+                    } else {
+                        println(response.isSuccessful)
+                        println(response.body())
+                        binding.progressBar.visibility = View.INVISIBLE
+                        binding.signupError.text = "Email or username already taken"
+                    }
+                }
             }
         }
     }

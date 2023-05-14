@@ -19,7 +19,7 @@ class CommentAdapter: RecyclerView.Adapter<CommentAdapter.CommentViewHolder>() {
 
     private val diffCallback = object: DiffUtil.ItemCallback<CommentsResponse>() {
         override fun areItemsTheSame(oldItem: CommentsResponse, newItem: CommentsResponse): Boolean {
-            return oldItem.commentCreator == newItem.commentCreator
+            return oldItem.id == newItem.id
         }
 
         override fun areContentsTheSame(oldItem: CommentsResponse, newItem: CommentsResponse): Boolean {
@@ -50,8 +50,8 @@ class CommentAdapter: RecyclerView.Adapter<CommentAdapter.CommentViewHolder>() {
         holder.binding.apply {
             val currentComment = comments[position]
 
-            commentCreator.text = currentComment.commentCreator
-            commentValue.text = currentComment.value
+            commentCreator.text = currentComment.user.username
+            commentValue.text = currentComment.body
         }
     }
 }

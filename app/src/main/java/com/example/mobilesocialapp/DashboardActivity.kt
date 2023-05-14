@@ -7,10 +7,7 @@ import android.view.LayoutInflater
 import androidx.fragment.app.Fragment
 import com.example.mobilesocialapp.constants.BundleConsts
 import com.example.mobilesocialapp.databinding.ActivityDashboardBinding
-import com.example.mobilesocialapp.fragments.CreateFragment
-import com.example.mobilesocialapp.fragments.HomeFragment
-import com.example.mobilesocialapp.fragments.ProfileFragment
-import com.example.mobilesocialapp.fragments.SearchedUsersFragment
+import com.example.mobilesocialapp.fragments.*
 
 class DashboardActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDashboardBinding
@@ -34,6 +31,7 @@ class DashboardActivity : AppCompatActivity() {
         val searchedUsersFragment = SearchedUsersFragment()
         val createFragment = CreateFragment()
         val profileFragment = ProfileFragment()
+        val changeProfileFragment = ChangeProfileFragment()
 
         homeFragment.arguments = bundleData
         setFragment(homeFragment)
@@ -58,6 +56,11 @@ class DashboardActivity : AppCompatActivity() {
                 R.id.profile -> {
                     profileFragment.arguments = bundleData
                     setFragment(profileFragment)
+                }
+
+                R.id.setProfile -> {
+                    changeProfileFragment.arguments = bundleData
+                    setFragment(changeProfileFragment)
                 }
             }
 

@@ -1,5 +1,5 @@
 package com.example.mobilesocialapp.request
 
-data class LikePostRequest(
+data class ObserveRequest(
     val id: Int
 )

@@ -9,6 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mobilesocialapp.RetrofitInstance
 import com.example.mobilesocialapp.adapters.CommentAdapter
+import com.example.mobilesocialapp.constants.BadResponses
 import com.example.mobilesocialapp.constants.BundleConsts
 import com.example.mobilesocialapp.databinding.FragmentCommentsBinding
 import com.example.mobilesocialapp.request.AddCommentRequest
@@ -48,7 +49,7 @@ class CommentsFragment() : Fragment() {
         }
 
         binding.sendComment.setOnClickListener {
-            val commentValue = binding.commentInput.text.toString()
+            var commentValue = binding.commentInput.text.toString()
 
             if(commentValue.isNotEmpty()){
                 val newComment = AddCommentRequest(commentValue)
@@ -72,34 +73,34 @@ class CommentsFragment() : Fragment() {
             val response = try {
                 RetrofitInstance.api.getComments(currentPostId)
             } catch(e: IOException) {
+                binding.commentsMessage.text = BadResponses.notInternetConnection
                 return@launchWhenCreated
             } catch(e: HttpException) {
+                binding.commentsMessage.text = BadResponses.unexpectedResponse
                 return@launchWhenCreated
             }
 
             if(response.isSuccessful && response.body() != null) {
                 commentAdapter.comments = response.body()!!
             } else {
-                println("Cant retrieve comments")
+                binding.commentsMessage.text = "Can't retrieve comments"
             }
         }
     }
 
     private fun addComment(newComment: AddCommentRequest, currentPostId: String, token: String) {
         lifecycleScope.launchWhenCreated {
-            val response = try {
+            try {
                 RetrofitInstance.api.addComment(currentPostId, "Bearer $token", newComment)
             } catch(e: IOException) {
+                println("e: $e")
                 return@launchWhenCreated
             } catch(e: HttpException) {
+                println("e2: $e")
                 return@launchWhenCreated
             }
 
-            if(response.isSuccessful && response.body() != null) {
-                getComments(currentPostId)
-            } else {
-                println("Cant add comment")
-            }
+            getComments(currentPostId)
         }
     }
 }

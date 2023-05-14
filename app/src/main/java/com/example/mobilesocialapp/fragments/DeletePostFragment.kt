@@ -52,7 +52,7 @@ class DeletePostFragment() : Fragment() {
 
             lifecycleScope.launchWhenCreated {
                 val response = try {
-                    RetrofitInstance.api.deletePostById(currentPostId)
+                    RetrofitInstance.api.deletePostById(currentPostId, "Bearer $token")
                 } catch(e: IOException) {
                     binding.progressBar.visibility = View.INVISIBLE
                     binding.deletePostMessage.text = BadResponses.notInternetConnection
@@ -63,14 +63,9 @@ class DeletePostFragment() : Fragment() {
                     return@launchWhenCreated
                 }
 
-                if(response.isSuccessful && response.body() != null) {
-                    binding.progressBar.visibility = View.INVISIBLE
-                    profileFragment.arguments = bundleData
-                    redirectToFragment.redirect(binding.root, profileFragment)
-                } else {
-                    binding.progressBar.visibility = View.INVISIBLE
-                    binding.deletePostMessage.text = "Cant delete this post"
-                }
+                binding.progressBar.visibility = View.INVISIBLE
+                profileFragment.arguments = bundleData
+                redirectToFragment.redirect(binding.root, profileFragment)
             }
         }
 

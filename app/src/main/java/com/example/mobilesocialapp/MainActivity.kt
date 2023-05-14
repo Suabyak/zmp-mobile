@@ -64,16 +64,16 @@ class MainActivity : AppCompatActivity() {
                         binding.progressBar.visibility = View.INVISIBLE
 
                         sharedPreferences.edit()
-                            .putString("jwt", response.body()!!.message)
+                            .putString("jwt", response.body()!!.token)
                             .apply()
                         sharedPreferences.edit()
-                            .putString("userId", response.body()!!.userId)
+                            .putString("userId", response.body()!!.id.toString())
                             .apply()
 
                         redirectToHome()
                     } else {
                         binding.progressBar.visibility = View.INVISIBLE
-                        binding.loginMessage.text = "Incorrect credentials"
+                        binding.loginMessage.text = "Invalid username or password"
                     }
                 }
             }

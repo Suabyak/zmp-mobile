@@ -23,7 +23,7 @@ class SearchUsersAdapter(val currentLoggedUserId: String, val token: String) : R
 
     private val diffCallback = object: DiffUtil.ItemCallback<UsersBySearchResponse>() {
         override fun areItemsTheSame(oldItem: UsersBySearchResponse, newItem: UsersBySearchResponse): Boolean {
-            return oldItem._id == newItem._id
+            return oldItem.id == newItem.id
         }
 
         override fun areContentsTheSame(oldItem: UsersBySearchResponse, newItem: UsersBySearchResponse): Boolean {
@@ -59,18 +59,18 @@ class SearchUsersAdapter(val currentLoggedUserId: String, val token: String) : R
 
             username.text = currentUser.username
 
-            if(currentUser.selectedFile.isNotEmpty()){
-                userProfileImg.setImageBitmap(decodeBase64String.decodeBase64(currentUser.selectedFile))
+            if(currentUser.file.isNotEmpty()){
+                userProfileImg.setImageBitmap(decodeBase64String.decodeBase64(currentUser.file))
             }
 
             username.setOnClickListener { v ->
-                bundleData.putString(BundleConsts.BundleUserId, currentUser._id)
+                bundleData.putString(BundleConsts.BundleUserId, currentUser.id.toString())
                 profileFragment.arguments = bundleData
                 redirectToFragment.redirect(v, profileFragment)
             }
 
             userProfileImg.setOnClickListener { v ->
-                bundleData.putString(BundleConsts.BundleUserId, currentUser._id)
+                bundleData.putString(BundleConsts.BundleUserId, currentUser.id.toString())
                 profileFragment.arguments = bundleData
                 redirectToFragment.redirect(v, profileFragment)
             }

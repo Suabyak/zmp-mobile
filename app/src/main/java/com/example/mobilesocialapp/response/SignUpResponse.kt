@@ -1,7 +1,6 @@
 package com.example.mobilesocialapp.response
 
-data class CreatePostResponse(
+data class SignUpResponse(
     val success: Boolean,
-    val message: String,
-    val id: Int
+    val message: String
 )
